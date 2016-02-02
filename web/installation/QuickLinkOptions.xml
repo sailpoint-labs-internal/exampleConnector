@@ -6,7 +6,7 @@
     <Reference class="sailpoint.object.DynamicScope" name="Everyone"/>
   </DynamicScopeRef>
   <QuickLinkRef>
-    <Reference class="sailpoint.object.QuickLink" name="orgHierarchyVisualizer"/>
+    <Reference class="sailpoint.object.QuickLink" name="helloworld"/>
   </QuickLinkRef>
 </QuickLinkOptions>
 </sailpoint>
