@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLinkOptions allowSelf="true">
+  <DynamicScopeRef>
+    <Reference class="sailpoint.object.DynamicScope" name="Everyone"/>
+  </DynamicScopeRef>
+  <QuickLinkRef>
+    <Reference class="sailpoint.object.QuickLink" name="orgHierarchyVisualizer"/>
+  </QuickLinkRef>
+</QuickLinkOptions>
+</sailpoint>

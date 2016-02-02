@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+    <ImportAction name="merge">
+        <Configuration name="PluginFrameworkConfig">
+            <Attributes>
+                <Map>
+                    <entry key="Plugins">
+                        <value>
+                            <Map>
+                                <entry key="HelloWorld">
+                                    <value>
+                                        <PluginFrameworkPlugin displayName="Hello World" enabled="true"
+                                                               version="alpha 1.0" installationDate="1453318960073"
+                                                               allowDisable="true" visible="true" allowUninstall="false"
+                                                               pluginConfigurationJson='{   "fullPage": {
+    "desktopIncludePath": "{plugin_root}/ui/hello.xhtml",
+    "mobileIncludePath": "{plugin_root}/ui/hello.xhtml"
+}, "snippets": [
+    {
+        "pagesMatchRegExPattern": ".*",
+        "isMobile": true,
+        "isDesktop": true,
+        "scriptPaths": [
+            "{plugin_root}/ui/js/headerInject.js"
+        ],
+        "cssPaths": []
+    }
+] }'
+                                                               uniqueName="HelloWorld"/>
+                                    </value>
+                                </entry>
+                            </Map>
+                        </value>
+                    </entry>
+                </Map>
+            </Attributes>
+        </Configuration>
+    </ImportAction>
+</sailpoint>

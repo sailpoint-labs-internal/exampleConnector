@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="external" category="labs" messageKey="Organizational Hierarchy" name="orgHierarchyVisualizer">
+  <Attributes>
+    <Map>
+      <entry key="url" value="pluginPage.jsf?pn=Visualizer#/visualizer/o/Department"/>
+    </Map>
+  </Attributes>
+</QuickLink>
+</sailpoint>

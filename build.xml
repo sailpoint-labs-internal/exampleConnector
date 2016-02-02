@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Hierarchy Visualizer Plugin" default="overlay">
+
+
+  <!-- allow overriding of build properties -->
+  <property file="user.build.properties"/>
+  <property file="build.properties"/>
+
+  <property name="overlay" location="build/dist/overlay"/>
+
+  <path id="build.compile.classpath">
+    <pathelement path="${iiq.home}/WEB-INF/classes"/>
+    <fileset dir="${iiq.home}/WEB-INF/lib">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="./web/jars" erroronmissingdir="false">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes" debug="true" classpathref="build.compile.classpath"
+           includeantruntime="last">
+    </javac>
+    <copy todir="build/classes">
+      <fileset dir="src">
+        <include name="**/*.hbm.xml"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="overlay" depends="compile" description="Output zip file overlay to build/dist dir">
+    <mkdir dir="${overlay}/jars"/>
+    <jar destfile="${overlay}/jars/helloworld.jar">
+      <fileset dir="build/classes">
+        <include name="sailpoint/plugin/**"/>
+        <include name="sailpoint/web/**"/>
+      </fileset>
+    </jar>
+    <copy todir="${overlay}">
+      <fileset dir="web"/>
+    </copy>
+    <zip basedir="${overlay}" destfile="build/dist/helloworld.${version}.zip"/>
+  </target>
+
+  <target name="dist" depends="overlay" description="Dev dist to IIQ home">
+    <mkdir dir="${iiq.home}/plugins/helloworld"/>
+    <unzip dest="${iiq.home}/plugins/helloworld" src="build/dist/helloworld.${version}.zip" overwrite="true"/>
+  </target>
+
+</project>
