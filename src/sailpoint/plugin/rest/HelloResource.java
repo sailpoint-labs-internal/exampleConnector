@@ -18,8 +18,8 @@ import sailpoint.plugin.visualizer.*;
  */
 
 @Path("helloworld")
-public class HelloResource extends AbstractPluginService {
-    private static final Log log = LogFactory.getLog(HelloResource.class);
+public class HelloResource extends AbstractPluginRestResource {
+    private static Log log = LogFactory.getLog(HelloResource.class);
 
     public HelloResource() {
     }
@@ -40,8 +40,8 @@ public class HelloResource extends AbstractPluginService {
         return helloWorldDTO;
     }
 
-    public void unload(){
-
+    protected Log getLog() {
+        return log;
     }
 
 }
