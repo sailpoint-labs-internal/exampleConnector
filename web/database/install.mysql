@@ -1,1 +1,5 @@
 select 1;
+
+CREATE  TABLE `new_table` (
+  `idnew_table` INT NOT NULL ,
+  PRIMARY KEY (`idnew_table`) );
