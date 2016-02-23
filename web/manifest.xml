@@ -10,24 +10,25 @@
                             <Map>
                                 <entry key="HelloWorld">
                                     <value>
-                                        <PluginFrameworkPlugin displayName="Hello World" enabled="true"
-                                                               version="alpha 1.0" installationDate="1453318960073"
-                                                               allowDisable="true" visible="true" allowUninstall="true"
-                                                               pluginConfigurationJson='{   "fullPage": {
-    "desktopIncludePath": "{plugin_root}/ui/hello.xhtml",
-    "mobileIncludePath": "{plugin_root}/ui/hello.xhtml"
-}, "snippets": [
-    {
-        "pagesMatchRegExPattern": ".*",
-        "isMobile": true,
-        "isDesktop": true,
-        "scriptPaths": [
-            "{plugin_root}/ui/js/headerInject.js"
-        ],
-        "cssPaths": []
-    }
-] }'
-                                                               uniqueName="HelloWorld"/>
+                                        <Plugin uniqueName="HelloWorld" displayName="Hello World" enabled="true"
+                                                version="0.1.1" installationDate="1453318960073"
+                                                allowDisable="true" visible="true" allowUninstall="true"
+                                                minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
+                                                minUpgradableVersion="0.0">
+
+                                            <PluginConfiguration>
+                                                <FullPage desktopIncludePath="{plugin_root}/ui/hello.xhtml"
+                                                          mobileIncludePath="{plugin_root}/ui/hello.xhtml"/>
+                                                <Snippets>
+                                                    <Snippet pagesMatchRegExPattern=".*" isMobile="true"
+                                                             isDesktop="true">
+                                                        <ScriptIncludes>
+                                                            <String>{plugin_root}/ui/js/headerInject.js</String>
+                                                        </ScriptIncludes>
+                                                    </Snippet>
+                                                </Snippets>
+                                            </PluginConfiguration>
+                                        </Plugin>
                                     </value>
                                 </entry>
                             </Map>

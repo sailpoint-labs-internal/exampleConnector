@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import sailpoint.rest.BaseResource;
 import sailpoint.tools.GeneralException;
-import sailpoint.plugin.visualizer.*;
+import sailpoint.plugin.helloworld.HelloWorldDTO;
 
 /**
  * @author nick.wellinghoff
@@ -29,7 +29,7 @@ public class HelloResource extends AbstractPluginRestResource {
     @GET
     @Path("getMessage")
     @Produces(MediaType.APPLICATION_JSON)
-    public sailpoint.plugin.visualizer.HelloWorldDTO
+    public HelloWorldDTO
     getHello() throws GeneralException {
 
         HelloWorldDTO helloWorldDTO = new HelloWorldDTO();

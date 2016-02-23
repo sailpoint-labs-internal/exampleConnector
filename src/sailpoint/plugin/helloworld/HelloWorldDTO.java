@@ -1,4 +1,4 @@
-package sailpoint.plugin.visualizer;
+package sailpoint.plugin.helloworld;
 
 import java.util.ArrayList;
 import java.util.List;
