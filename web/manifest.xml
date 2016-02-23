@@ -20,8 +20,7 @@
                                                 <FullPage desktopIncludePath="{plugin_root}/ui/hello.xhtml"
                                                           mobileIncludePath="{plugin_root}/ui/hello.xhtml"/>
                                                 <Snippets>
-                                                    <Snippet pagesMatchRegExPattern=".*" isMobile="true"
-                                                             isDesktop="true">
+                                                    <Snippet pagesMatchRegExPattern=".*" isMobile="true" isDesktop="true">
                                                         <ScriptIncludes>
                                                             <String>{plugin_root}/ui/js/headerInject.js</String>
                                                         </ScriptIncludes>
