@@ -16,7 +16,7 @@ var helloWorldUrl = SailPoint.CONTEXT_PATH + '/pluginPage.jsf?pn=HelloWorld';
 jQuery(document).ready(function(){
 	jQuery("ul.navbar-right li:first")
 		.before(
-				'<li>' +
+				'<li class="dropdown">' +
 				'		<a href="' + helloWorldUrl + '" tabindex="0" role="menuitem">' +
 				'			<i role="presenation" class="fa fa-exclamation fa-lg"></i>' +
 				'		</a>' +

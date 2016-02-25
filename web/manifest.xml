@@ -11,10 +11,9 @@
                                 <entry key="HelloWorld">
                                     <value>
                                         <Plugin uniqueName="HelloWorld" displayName="Hello World" enabled="true"
-                                                version="0.1.1" installationDate="1453318960073"
-                                                allowDisable="true" visible="true" allowUninstall="true"
+                                                version="0.1.3" allowDisable="true" visible="true" allowUninstall="true"
                                                 minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
-                                                minUpgradableVersion="0.0">
+                                                minUpgradableVersion="0.1.3">
 
                                             <PluginConfiguration>
                                                 <FullPage desktopIncludePath="{plugin_root}/ui/hello.xhtml"
