@@ -1,4 +1,4 @@
-package sailpoint.plugin.rest;
+package sailpoint.plugin.helloworld.rest;
 
 import java.util.*;
 
@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import sailpoint.rest.BaseResource;
 import sailpoint.tools.GeneralException;
 import sailpoint.plugin.helloworld.HelloWorldDTO;
+import sailpoint.plugin.rest.AbstractPluginRestResource;
 
 /**
  * @author nick.wellinghoff
