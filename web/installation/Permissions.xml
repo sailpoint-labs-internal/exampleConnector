@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+    <SPRight displayName="HelloWorldPluginRestServiceAllow" name="HelloWorldPluginRestServiceAllow">
+        <Description>Allow access to Hello World Plugin REST Service</Description>
+    </SPRight>
+    <Capability displayName="HelloWorldPluginRestServiceAccess" name="HelloWorldPluginRestServiceAccess">
+        <Description>Allow access to Hello World Plugin REST Service</Description>
+        <RightRefs>
+            <Reference class="sailpoint.object.SPRight" name="HelloWorldPluginRestServiceAllow"/>
+        </RightRefs>
+    </Capability>
+</sailpoint>
+

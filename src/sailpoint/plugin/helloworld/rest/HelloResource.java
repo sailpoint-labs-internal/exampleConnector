@@ -13,11 +13,14 @@ import sailpoint.rest.BaseResource;
 import sailpoint.tools.GeneralException;
 import sailpoint.plugin.helloworld.HelloWorldDTO;
 import sailpoint.plugin.rest.AbstractPluginRestResource;
+import sailpoint.plugin.rest.jaxrs.SPRightsRequired;
 
 /**
  * @author nick.wellinghoff
  */
 
+
+@SPRightsRequired(value={"HelloWorldPluginRestServiceAllow"})
 @Path("helloworld")
 public class HelloResource extends AbstractPluginRestResource {
 
