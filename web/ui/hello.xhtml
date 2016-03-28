@@ -31,7 +31,7 @@
                 {
                     request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
                 },
-                url: "/identityiq/plugin/helloworld/getMessage"
+                url: "#{base.requestContextPath}/plugin/helloworld/getMessage"
             })
                     .done(function (msg) {
                         $("#hello").html(msg._message);
