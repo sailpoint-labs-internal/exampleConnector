@@ -15,17 +15,24 @@
                                                 minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
                                                 minUpgradableVersion="0.1.3">
 
-                                            <PluginConfiguration>
+                                            <PluginConfiguration
+                                                    settingsPageTemplateURL="ui/htmlTemplates/pluginSettings.html">
                                                 <FullPage desktopIncludePath="{plugin_root}/ui/hello.xhtml"
                                                           mobileIncludePath="{plugin_root}/ui/hello.xhtml"/>
                                                 <Snippets>
-                                                    <Snippet pagesMatchRegExPattern=".*" isMobile="true" isDesktop="true">
+                                                    <Snippet pagesMatchRegExPattern=".*" isMobile="true"
+                                                             isDesktop="true">
                                                         <ScriptIncludes>
                                                             <String>{plugin_root}/ui/js/headerInject.js</String>
                                                         </ScriptIncludes>
                                                     </Snippet>
                                                 </Snippets>
                                             </PluginConfiguration>
+                                            <ConfigurableSettings>
+                                                <Map>
+                                                    <entry key="SampleValue" value="This is some sample value"/>
+                                                </Map>
+                                            </ConfigurableSettings>
                                         </Plugin>
                                     </value>
                                 </entry>

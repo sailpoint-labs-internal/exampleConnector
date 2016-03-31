@@ -14,6 +14,7 @@ import sailpoint.tools.GeneralException;
 import sailpoint.plugin.helloworld.HelloWorldDTO;
 import sailpoint.plugin.rest.AbstractPluginRestResource;
 import sailpoint.plugin.rest.jaxrs.SPRightsRequired;
+import sailpoint.plugin.rest.jaxrs.AllowAll;
 
 /**
  * @author nick.wellinghoff
@@ -33,6 +34,15 @@ public class HelloResource extends AbstractPluginRestResource {
     @GET
     @Path("getMessage")
     @Produces(MediaType.APPLICATION_JSON)
+
+    // Testing @AllowAll override.   This method will allow anyone (assuming the get past the login/csrf filters, etc)
+    @AllowAll
+
+    /*
+    You could also specify rights here.   Method annotations always take precedence over the parent (class) annotation
+    @SPRightsRequired(value={"someRightHere"})
+     */
+
     public HelloWorldDTO
     getHello() throws GeneralException {
 
