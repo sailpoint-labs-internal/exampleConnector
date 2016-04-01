@@ -25,6 +25,9 @@
                                                         <ScriptIncludes>
                                                             <String>{plugin_root}/ui/js/headerInject.js</String>
                                                         </ScriptIncludes>
+                                                        <StylesheetIncludes>
+                                                            <String>{plugin_root}/ui/css/helloWorld.css</String>
+                                                        </StylesheetIncludes>
                                                     </Snippet>
                                                 </Snippets>
                                             </PluginConfiguration>

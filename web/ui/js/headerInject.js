@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
 		.before(
 				'<li class="dropdown">' +
 				'		<a href="' + helloWorldUrl + '" tabindex="0" role="menuitem">' +
-				'			<i role="presenation" class="fa fa-exclamation fa-lg"></i>' +
+				'			<i role="presenation" class="fa fa-exclamation fa-lg example"></i>' +
 				'		</a>' +
 				'</li>'
 		);
