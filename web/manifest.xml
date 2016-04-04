@@ -33,7 +33,7 @@
                                             </PluginConfiguration>
                                             <ConfigurableSettings>
                                                 <Map>
-                                                    <entry key="SampleValue" value="This is some sample value"/>
+                                                    <entry key="Message" value="Hello World"/>
                                                 </Map>
                                             </ConfigurableSettings>
                                         </Plugin>

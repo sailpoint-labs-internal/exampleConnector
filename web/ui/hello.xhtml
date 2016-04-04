@@ -17,7 +17,8 @@
 
 <ui:composition>
 
-    <sp:style serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
+    <sp:style
+            serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
         <src>ng-modalDialog.css?#{debug.revision}</src>
     </sp:style>
 
@@ -26,13 +27,12 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajax({
-                method: "GET",
-                beforeSend: function (request)
-                {
-                    request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
-                },
-                url: "#{base.requestContextPath}/plugin/helloworld/getMessage"
-            })
+                        method: "GET",
+                        beforeSend: function (request) {
+                            request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+                        },
+                        url: "#{base.requestContextPath}/plugin/helloworld/getMessage"
+                    })
                     .done(function (msg) {
                         $("#hello").html(msg._message);
                     });
@@ -41,7 +41,6 @@
     </script>
 
 </ui:composition>
-
 
 
 </body>
