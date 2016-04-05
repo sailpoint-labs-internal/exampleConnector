@@ -10,13 +10,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import sailpoint.object.Attributes;
-import sailpoint.plugin.common.PluginFrameworkAPI;
+import sailpoint.plugin.common.PluginRegistry;
+import sailpoint.plugin.rest.jaxrs.AllowAll;
 import sailpoint.rest.BaseResource;
 import sailpoint.tools.GeneralException;
 import sailpoint.plugin.helloworld.HelloWorldDTO;
 import sailpoint.plugin.rest.AbstractPluginRestResource;
 import sailpoint.plugin.rest.jaxrs.SPRightsRequired;
-import sailpoint.plugin.rest.jaxrs.AllowAll;
+//import sailpoint.plugin.rest.jaxrs.AllowAll;
 import sailpoint.web.plugin.config.Plugin;
 
 
@@ -34,6 +35,7 @@ public class HelloResource extends AbstractPluginRestResource {
 
     // Testing @AllowAll override.   This method will allow anyone (assuming the get past the login/csrf filters, etc)
     @AllowAll
+
     /*
     You could also specify rights here.   Method annotations always take precedence over the parent (class) annotation
     @SPRightsRequired(value={"someRightHere"})
@@ -45,13 +47,14 @@ public class HelloResource extends AbstractPluginRestResource {
     @GET
     @Path("getMessage")
     @Produces(MediaType.APPLICATION_JSON)
+
     public HelloWorldDTO
     getHello() throws Exception {
 
         String message = "No message set!";
         HelloWorldDTO helloWorldDTO = new HelloWorldDTO();
 
-        Plugin plugin = PluginFrameworkAPI.get("HelloWorld");
+        Plugin plugin = PluginRegistry.get("HelloWorld");
         if (plugin != null) {
             Attributes settingsAttrs = plugin.getConfigurableSettings();
             if (settingsAttrs.containsKey("Message")) {
