@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<ServiceDefinition interval="10" hosts="global" executor="sailpoint.plugin.server.PluginServiceExecutor"
+                   name="HelloService">
+    <Description>
+        A Service to demo something that runs in the background
+    </Description>
+    <Attributes>
+        <Map>
+            <entry key='pluginUniqueName' value='HelloWorld'/>
+            <entry key='implementationClass' value='sailpoint.plugin.helloworld.server.HelloService'/>
+        </Map>
+    </Attributes>
+</ServiceDefinition>
+</sailpoint>
