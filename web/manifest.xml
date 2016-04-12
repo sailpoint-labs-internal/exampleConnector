@@ -13,7 +13,8 @@
                                         <Plugin uniqueName="HelloWorld" displayName="Hello World" enabled="true"
                                                 version="0.1.3" allowDisable="true" visible="true" allowUninstall="true"
                                                 minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
-                                                minUpgradableVersion="0.1.3" certificationLevel="BASIC">
+                                                minUpgradableVersion="0.1.3" certificationLevel="BASIC"
+                                                pluginAccessRight="HelloWorldPluginRight">
 
                                             <PluginConfiguration
                                                     settingsPageTemplateURL="ui/htmlTemplates/pluginSettings.html">
@@ -21,7 +22,7 @@
                                                           mobileIncludePath="{plugin_root}/ui/hello.xhtml"/>
                                                 <Snippets>
                                                     <Snippet pagesMatchRegExPattern=".*" isMobile="true"
-                                                             isDesktop="true">
+                                                             isDesktop="true" rightRequired="HelloWorldPluginIconRight" >
                                                         <ScriptIncludes>
                                                             <String>{plugin_root}/ui/js/headerInject.js</String>
                                                         </ScriptIncludes>
