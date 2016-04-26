@@ -30,6 +30,8 @@ import sailpoint.web.plugin.config.Plugin;
 @Path("helloworld")
 public class HelloResource extends AbstractPluginRestResource {
 
+    private static int _testCounter = 0;
+
     public HelloResource() {
     }
 
@@ -51,6 +53,8 @@ public class HelloResource extends AbstractPluginRestResource {
     public HelloWorldDTO
     getHello() throws Exception {
 
+        _testCounter++;
+
         String message = "No message set!";
         HelloWorldDTO helloWorldDTO = new HelloWorldDTO();
 
@@ -60,6 +64,8 @@ public class HelloResource extends AbstractPluginRestResource {
             if (settingsAttrs.containsKey("Message")) {
                 message = (String)settingsAttrs.get("Message");
             }
+
+            message += " (" + _testCounter + ")";
         }
 
         helloWorldDTO.set_message(message);

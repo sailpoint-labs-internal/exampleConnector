@@ -12,8 +12,10 @@ import sailpoint.api.SailPointContext;
  */
 public class HelloService extends AbstractPluginBackgroundService{
     private static final Log log = LogFactory.getLog(HelloService.class);
+    private static int _testCounter = 0;
 
     public void execute(SailPointContext context) throws GeneralException {
-        log.warn("Hi");
+        _testCounter++;
+        log.warn("Hi 3 (static counter: " + _testCounter + ")");
     }
 }
