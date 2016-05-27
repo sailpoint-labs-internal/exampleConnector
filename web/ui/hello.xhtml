@@ -17,6 +17,8 @@
 
 <ui:composition>
 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A"></script>
 
     <sp:style
             serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
@@ -28,28 +30,26 @@
         <!--<title>IP Address geocoding on Google Maps</title>-->
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
-        <!--<src>ipmapper.js</src>-->
-        <!--<src>queryMap.js</src>-->
+        <src>ipmapper.js</src>
+        <src>queryMap.js</src>
         </sp:script>
 
 
     <h2> did this render? </h2>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A"></script>
-        <!--<script type="text/javascript">-->
-            <!--$(function(){-->
-                <!--try{-->
-                    <!--IPMapper.initializeMap("map");-->
-                    <!--IPMapper.addIPMarker("111.111.111.111");-->
-                <!--} catch(e){-->
-                    <!--//handle error-->
-                <!--}-->
-            <!--});-->
-        <!--</script>-->
+        <script type="text/javascript">
+            $(function(){
+                try{
+                    IPMapper.initializeMap("map");
+                    IPMapper.addIPMarker("111.111.111.111");
+                } catch(e){
+                    console.log(e);
+                }
+            });
+        </script>
 
-    <!--<input id="ip" name="ip" type="text" />-->
-    <!--<button onclick="IPMapper.addIPMarker($('#ip').val());">Geocode</button>-->
-    <!--<div id="map" style="height: 500px;"></div>-->
+    <input id="ip" name="ip" type="text" />
+    <button onclick="IPMapper.addIPMarker($('#ip').val());">Geocode</button>
+    <div id="map" style="height: 600px;"></div>
 
     <!--</script>-->
     <!--<sp:script enabled="false"-->
