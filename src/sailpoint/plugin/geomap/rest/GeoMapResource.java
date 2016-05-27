@@ -83,32 +83,23 @@ public class GeoMapResource extends AbstractPluginRestResource {
     /**
      * Return the jsessionId for current user
      */
-
-    //swap this to void?
     @GET
     @Path("processLogin")
     @Produces(MediaType.APPLICATION_JSON)
     public boolean
     processLogin() throws GeneralException{
         boolean success = false;
-
         String session_id = getRequest().getSession().getId();
         String ip_address = request.getHeader("X-FORWARDED-FOR");
         if (ip_address == null) {
             ip_address = request.getRemoteAddr();
         }
-
-
         try {
-
             Identity loggedInUser = getLoggedInUser();
             if (loggedInUser != null) {
-
                 System.out.println("Connecting to database...");
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
-
-
                 // System.out.println(loggedInUser.getDisplayableName());
                 String uname = loggedInUser.getDisplayName();
                 String sql = String.format("insert into geo_table (uname, session_id, ip_address, login_time) values ('%s', '%s', '%s', NOW());", uname, session_id, ip_address);
@@ -117,24 +108,44 @@ public class GeoMapResource extends AbstractPluginRestResource {
                     stmt.executeUpdate(sql);
                     System.out.println("insert complete!");
                 }
-
                 success = true;
             }
         }
         catch(Exception e){
             log.error(e);
-            throw new GeneralException(e);
+//            throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
 
         return success;
     }
 
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
     @GET
     @Path("getLoginLocations")
     @Produces(MediaType.APPLICATION_JSON)
     public boolean
     getLoginLocations() throws GeneralException{
-
-        return false;
+        boolean success = false;
+        try {
+            System.out.println("Uploading DB to map...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+            String sql = "SELECT ip_address FROM geo_table";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
+                while (rs.next()) {
+                //Retrieve by column name
+                    String ip_address = rs.getString("ip_address");
+                    System.out.println("ip_address: " + ip_address);
+                }
+            }
+            success = true;
+        }
+        catch(Exception e){
+            log.error(e);
+        }
+        return success;
     }
 }
