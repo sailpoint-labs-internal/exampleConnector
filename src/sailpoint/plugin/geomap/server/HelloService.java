@@ -1,4 +1,4 @@
-package sailpoint.plugin.helloworld.server;
+package sailpoint.plugin.geomap.server;
 
 import sailpoint.plugin.server.AbstractPluginBackgroundService;
 import org.apache.commons.logging.Log;
