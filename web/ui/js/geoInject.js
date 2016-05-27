@@ -60,7 +60,7 @@ $(document).ready(function () {
 //         beforeSend: function (request) {
 //             request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
 //         },
-//         url: "plugin/geoMap/loadMap"
+//         url: "plugin/geoMap/getLoginLocations"
 //     })
 //         .done(function (msg) {
 //             console.log(msg);

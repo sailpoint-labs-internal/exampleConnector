@@ -104,7 +104,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
             Identity loggedInUser = getLoggedInUser();
             if (loggedInUser != null) {
 
-//            Class.forName("com.mysql.jdbc.Driver");
                 System.out.println("Connecting to database...");
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
@@ -131,17 +130,10 @@ public class GeoMapResource extends AbstractPluginRestResource {
     }
 
     @GET
-    @Path("loadMap")
+    @Path("getLoginLocations")
     @Produces(MediaType.APPLICATION_JSON)
     public boolean
-    loadMap() throws GeneralException{
-//        country     =   request.getHeader("X-AppEngine-Country");
-//        region      =   request.getHeader("X-AppEngine-Region");
-//        city        =   request.getHeader("X-AppEngine-City");
-//        temp        =   request.getHeader("X-AppEngine-CityLatLong");
-        request.getHeader("X-AppEngine-Country");
-        request.getHeader("X-AppEngine-Country");
-
+    getLoginLocations() throws GeneralException{
 
         return false;
     }
