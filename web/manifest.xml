@@ -18,8 +18,8 @@
 
                                             <PluginConfiguration
                                                     settingsPageTemplateURL="ui/htmlTemplates/pluginSettings.html">
-                                                <FullPage desktopIncludePath="{plugin_root}/ui/hello.xhtml"
-                                                          mobileIncludePath="{plugin_root}/ui/hello.xhtml"/>
+                                                <FullPage desktopIncludePath="{plugin_root}/ui/geoMap.xhtml"
+                                                          mobileIncludePath="{plugin_root}/ui/geoMap.xhtml"/>
                                                 <Snippets>
 
                                                         <Snippet pagesMatchRegExPattern=".*\/home.xhtml" isMobile="true"

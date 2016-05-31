@@ -1,21 +1,19 @@
 package sailpoint.plugin.geomap.rest;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import com.google.gson.Gson;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpRequest;
 import sailpoint.api.SailPointContext;
 import sailpoint.api.SailPointFactory;
 import sailpoint.object.Attributes;
 import sailpoint.object.Identity;
 import sailpoint.plugin.common.PluginRegistry;
 import sailpoint.plugin.rest.jaxrs.AllowAll;
-import sailpoint.rest.BaseResource;
 import sailpoint.tools.GeneralException;
 import sailpoint.plugin.geomap.GeoMapDTO;
 import sailpoint.plugin.rest.AbstractPluginRestResource;
@@ -90,6 +88,8 @@ public class GeoMapResource extends AbstractPluginRestResource {
     processLogin() throws GeneralException{
         boolean success = false;
         String session_id = getRequest().getSession().getId();
+//        String ip_address = ("" + sock.getInetAddress()).substring(1);
+//
         String ip_address = request.getHeader("X-FORWARDED-FOR");
         if (ip_address == null) {
             ip_address = request.getRemoteAddr();
@@ -123,29 +123,97 @@ public class GeoMapResource extends AbstractPluginRestResource {
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
      */
     @GET
-    @Path("getLoginLocations")
+    @Path("getLoginLocations/{uname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public boolean
-    getLoginLocations() throws GeneralException{
-        boolean success = false;
+    public ArrayList<String>
+    getLoginLocations(
+            @PathParam("uname") String uname
+    ) throws GeneralException{
+        ArrayList<String> ips = new ArrayList<String>();
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
-            String sql = "SELECT ip_address FROM geo_table";
+            String sql = "select * from geo_table where uname like '%"+ uname+"%';";
+
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
                 while (rs.next()) {
-                //Retrieve by column name
+                    //Retrieve by column name
                     String ip_address = rs.getString("ip_address");
                     System.out.println("ip_address: " + ip_address);
+                    ips.add(ip_address);
+                    System.out.println(ips.toString() + " is arraylist");
                 }
             }
-            success = true;
+            return ips;
         }
         catch(Exception e){
             log.error(e);
         }
-        return success;
+        return ips;
+    }
+
+
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
+    @GET
+    @Path("getLoginLocations/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<String>
+    getLoginLocations( ) throws GeneralException{
+        ArrayList<String> ips = new ArrayList<String>();
+        try {
+            System.out.println("Uploading DB to map...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+
+            String sql = "SELECT ip_address FROM geo_table";
+
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
+                while (rs.next()) {
+                    //Retrieve by column name
+                    String ip_address = rs.getString("ip_address");
+                    System.out.println("ip_address: " + ip_address);
+                    ips.add(ip_address);
+                    System.out.println(ips.toString() + " is arraylist");
+                }
+            }
+            return ips;
+        }
+        catch(Exception e){
+            log.error(e);
+        }
+        return ips;
+    }
+
+
+
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
+    @GET
+    @Path("getDB")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResultSet
+    getDB() throws GeneralException {
+        try {
+            System.out.println("Uploading DB to map...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+
+            String sql = "SELECT * FROM geo_table";
+
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                System.out.println("THIS IS WHAT IT IS ################# " + rs);
+                return rs;
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return null;
     }
 }

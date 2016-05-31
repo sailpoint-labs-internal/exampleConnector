@@ -1,3 +1,19 @@
 .example {
     color: black;
 }
+
+tr{
+    border: solid 1px black;
+}
+
+#myTable td {
+    font-size: 16px;
+    padding-right: 20px;
+}
+
+#myTable th {
+    font-size: 18px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+
