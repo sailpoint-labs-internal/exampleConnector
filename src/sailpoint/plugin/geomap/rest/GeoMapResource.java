@@ -1,12 +1,7 @@
 package sailpoint.plugin.geomap.rest;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.HttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sailpoint.api.SailPointContext;
@@ -21,29 +16,14 @@ import sailpoint.plugin.rest.jaxrs.SPRightsRequired;
 import sailpoint.tools.GeneralException;
 import sailpoint.web.plugin.config.Plugin;
 
-import java.io.BufferedReader;
-import java.net.URL;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import javax.ws.rs.core.Response;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-
-import static org.apache.http.HttpHeaders.USER_AGENT;
 
 //import sailpoint.plugin.rest.jaxrs.AllowAll;
 
@@ -156,9 +136,20 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @POST
     @Path("processLogin")
     @Consumes("application/x-www-form-urlencoded")
-    public Response processLogin(@FormParam("json") String json) throws GeneralException {
-
+    public Response processLogin(@FormParam("json") String json) throws GeneralException, JSONException {
         String session_id = getRequest().getSession().getId();
+        System.out.println("mnew iter");
+
+        //store the result of geoip and plot it
+        JSONObject test = new JSONObject(json);
+        String ip_online = test.getString("ip");
+        double lat = test.getDouble("latitude");
+        double lng = test.getDouble("longitude");
+
+        String ip_address = request.getHeader("X-FORWARDED-FOR");
+        if (ip_address == null) {
+            ip_address = request.getRemoteAddr();
+        }
 
         try {
             Identity loggedInUser = getLoggedInUser();
@@ -169,11 +160,11 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
 
                 String uname = loggedInUser.getDisplayName();
-                String sql = String.format("insert into geo_table (uname, session_id, ip_address, login_time) values ('%s', '%s', '%s', NOW());", uname, session_id, json);
+                String sql = String.format("insert into geo_table (uname, session_id, ip_address, login_time, lat, lng, ip_online) values ('%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s');", uname, session_id, ip_address, lat, lng, ip_online);
 
                 try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.executeUpdate(sql);
-                    System.out.println("insert complete!");
+                    System.out.println("insert complete! ----- ALL VALID!!");
                 }
             }
         }
@@ -228,31 +219,35 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Path("getLoginLocations/")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<String>
+//    public String
     getLoginLocations( ) throws GeneralException{
-        ArrayList<String> ips = new ArrayList<String>();
+        ArrayList<String> ret = new ArrayList<String>();
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
 
-            String sql = "SELECT ip_address FROM geo_table";
-
+            String sql = "SELECT uname, lat, lng FROM geo_table";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+
             try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
                 while (rs.next()) {
-                    //Retrieve by column name
-                    String ip_address = rs.getString("ip_address");
-                    System.out.println("ip_address: " + ip_address);
-                    ips.add(ip_address);
-                    System.out.println(ips.toString() + " is arraylist");
+
+                    String uname = rs.getString("uname");
+                    double lat = rs.getDouble("lat");
+                    double lng = rs.getDouble("lng");
+                    System.out.println("pair == : " + lat + " " + lng);
+                    ret.add(String.format("{\"User Name\":\"%s\", \"latitude\":%f, \"longitude\":%f}", uname, lat, lng));
                 }
+                System.out.println(ret.toString() + " this should be all ");
             }
-            return ips;
+            return ret;
         }
         catch(Exception e){
+            System.out.println(e + " ERRORRR");
             log.error(e);
         }
-        return ips;
+        return ret;
     }
 
 
@@ -318,4 +313,5 @@ public class GeoMapResource extends AbstractPluginRestResource {
         return null;
 //        return ans.toString();
     }
+
 }

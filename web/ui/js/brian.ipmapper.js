@@ -77,23 +77,38 @@ var IPMapper = {
             });
         }
     },
+    
     placeIPMarkerFromJSON: function(json) {
-
-        var data = $.parseJSON(json);
-        if (data) {
-            var latitude = data.latitude;
-            var longitude = data.longitude;
-            var contentString = "";
-            $.each(data, function(key, val) {
-                contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
-            });
-            var latlng = new google.maps.LatLng(latitude, longitude);
-            var marker = new google.maps.Marker({ //create Map Marker
-                map: IPMapper.map,
-                draggable: false,
-                position: latlng
-            });
-            IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+        console.log(json + " is json");
+        var pairs= $.parseJSON(json);
+        if (pairs && pairs.constructor === Array) {
+            for (var x = 0; x < pairs.length; x++) {
+                console.log(pairs[x] + " is iterating");
+                console.dir(pairs[x] + " is iterating");
+                place(pairs[x]);
+            }
+            function place(data) {
+                // console.log(json);
+                var latitude = data.latitude;
+                var longitude = data.longitude;
+                var contentString = "";
+                $.each(data, function (key, val) {
+                    contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
+                });
+                var latlng = new google.maps.LatLng(latitude, longitude);
+                var marker = new google.maps.Marker({ //create Map Marker
+                    map: IPMapper.map,
+                    draggable: false,
+                    position: latlng
+                });
+                IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+            }
+        }
+        else if(pairs){
+            console.log("poor pairs ", pairs);
+        }
+        else{
+            console.log("fml");
         }
     }
 }

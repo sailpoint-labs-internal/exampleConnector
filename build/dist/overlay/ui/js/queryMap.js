@@ -11,10 +11,8 @@ function get_location(callback) {
         url: "plugin/geoMap/getLoginLocations/"
     })
         .done(function (msg) {
-            console.log(msg + " from queryMap.js");
             // console.dir(msg);
             callback(msg);
-            // return msg;
         });
 };
 
@@ -30,7 +28,6 @@ function get_location2(val, callback) {
         url: "plugin/geoMap/getLoginLocations/"+val
     })
         .done(function (msg) {
-            console.log(msg + " from queryMap.js");
             // console.dir(msg);
             callback(msg);
             // return msg;
