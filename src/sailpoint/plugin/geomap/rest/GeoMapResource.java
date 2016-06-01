@@ -1,29 +1,50 @@
 package sailpoint.plugin.geomap.rest;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
+import org.apache.http.client.HttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 import sailpoint.api.SailPointContext;
 import sailpoint.api.SailPointFactory;
 import sailpoint.object.Attributes;
 import sailpoint.object.Identity;
 import sailpoint.plugin.common.PluginRegistry;
-import sailpoint.plugin.rest.jaxrs.AllowAll;
-import sailpoint.tools.GeneralException;
 import sailpoint.plugin.geomap.GeoMapDTO;
 import sailpoint.plugin.rest.AbstractPluginRestResource;
+import sailpoint.plugin.rest.jaxrs.AllowAll;
 import sailpoint.plugin.rest.jaxrs.SPRightsRequired;
-//import sailpoint.plugin.rest.jaxrs.AllowAll;
+import sailpoint.tools.GeneralException;
 import sailpoint.web.plugin.config.Plugin;
 
+import java.io.BufferedReader;
+import java.net.URL;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+
+import static org.apache.http.HttpHeaders.USER_AGENT;
+
+//import sailpoint.plugin.rest.jaxrs.AllowAll;
 
 
 /**
@@ -81,31 +102,74 @@ public class GeoMapResource extends AbstractPluginRestResource {
         return geoMapDTO;
     }
 
+
+
+    @GET
+    @Path("processLoginUsingHeaders/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String
+    processLoginUsingHeaders() throws GeneralException, JSONException, IOException {
+        System.out.println("RUNNING>>>>>");
+
+
+        String url = "http://freegeoip.net/json/";
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(url);
+
+        request.addHeader("User-Agent", USER_AGENT);
+        HttpResponse response = client.execute(request);
+        System.out.println("Response Code : "
+                + response.getStatusLine().getStatusCode());
+
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+
+        StringBuffer result = new StringBuffer();
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+            System.out.println(line);
+        }
+        return "HELLO!";
+
+//        String surl = "http://freegeoip.net/json/";
+//        URL url = new URL(surl);
+//        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+//        request.connect();
+//
+//        JsonParser jp = new JsonParser();
+//        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+//        JsonObject rootobj = root.getAsJsonObject();
+//        System.out.println(rootobj.toString() + "  .... TOSTRINGGGG");
+//        return rootobj.toString();
+
+
+
+
+    }
+
     /**
      * Return the jsessionId for current user
+     * @param json
      */
-    @GET
+    @POST
     @Path("processLogin")
     @Produces(MediaType.APPLICATION_JSON)
     public boolean
-    processLogin() throws GeneralException{
+    processLogin(@FormParam("json") JSONObject json) throws GeneralException{
         boolean success = false;
         String session_id = getRequest().getSession().getId();
-//        String ip_address = ("" + sock.getInetAddress()).substring(1);
-//
-        String ip_address = request.getHeader("X-FORWARDED-FOR");
-        if (ip_address == null) {
-            ip_address = request.getRemoteAddr();
-        }
+
         try {
             Identity loggedInUser = getLoggedInUser();
             if (loggedInUser != null) {
                 System.out.println("Connecting to database...");
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
-                // System.out.println(loggedInUser.getDisplayableName());
+
+
                 String uname = loggedInUser.getDisplayName();
-                String sql = String.format("insert into geo_table (uname, session_id, ip_address, login_time) values ('%s', '%s', '%s', NOW());", uname, session_id, ip_address);
+                String sql = String.format("insert into geo_table (uname, session_id, ip_address, login_time) values ('%s', '%s', '%s', NOW());", uname, session_id, json);
 
                 try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.executeUpdate(sql);

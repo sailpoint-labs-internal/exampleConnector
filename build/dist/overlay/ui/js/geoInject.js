@@ -4,7 +4,7 @@ $(document).ready(function () {
         beforeSend: function (request) {
             request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
         },
-        url: "plugin/geoMap/processLogin"
+        url: "plugin/geoMap/processLoginUsingHeaders"
     })
         .done(function (msg) {
             console.log(msg);
