@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.Response;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -112,24 +113,24 @@ public class GeoMapResource extends AbstractPluginRestResource {
         System.out.println("RUNNING>>>>>");
 
 
-        String url = "http://freegeoip.net/json/";
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(url);
-
-        request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response = client.execute(request);
-        System.out.println("Response Code : "
-                + response.getStatusLine().getStatusCode());
-
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-            System.out.println(line);
-        }
+//        String url = "http://freegeoip.net/json/";
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet request = new HttpGet(url);
+//
+//        request.addHeader("User-Agent", USER_AGENT);
+//        HttpResponse response = client.execute(request);
+//        System.out.println("Response Code : "
+//                + response.getStatusLine().getStatusCode());
+//
+//        BufferedReader rd = new BufferedReader(
+//                new InputStreamReader(response.getEntity().getContent()));
+//
+//        StringBuffer result = new StringBuffer();
+//        String line = "";
+//        while ((line = rd.readLine()) != null) {
+//            result.append(line);
+//            System.out.println(line);
+//        }
         return "HELLO!";
 
 //        String surl = "http://freegeoip.net/json/";
@@ -154,10 +155,9 @@ public class GeoMapResource extends AbstractPluginRestResource {
      */
     @POST
     @Path("processLogin")
-    @Produces(MediaType.APPLICATION_JSON)
-    public boolean
-    processLogin(@FormParam("json") JSONObject json) throws GeneralException{
-        boolean success = false;
+    @Consumes("application/x-www-form-urlencoded")
+    public Response processLogin(@FormParam("json") String json) throws GeneralException {
+
         String session_id = getRequest().getSession().getId();
 
         try {
@@ -175,14 +175,14 @@ public class GeoMapResource extends AbstractPluginRestResource {
                     stmt.executeUpdate(sql);
                     System.out.println("insert complete!");
                 }
-                success = true;
             }
         }
         catch(Exception e){
             log.error(e);
-//            throw new GeneralException(e); //maybe don't throw so we can still return false?
+            throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
-        return success;
+
+        return Response.ok().build();
     }
 
     /**
