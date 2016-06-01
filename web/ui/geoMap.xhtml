@@ -48,9 +48,9 @@
 
                         msg.forEach(function(entry) {
                             console.log(entry + " from within ");
-                            try {
-                                IPMapper.addIPMarker(entry);
+                            try {IPMapper.addIPMarker(entry);
                             }catch(err){
+
                                 console.log("bad ip " + err);
                             }
                         });
@@ -81,6 +81,7 @@
                     console.log(e);
                 }
             };
+
         </script>
 
     <input id="ip" name="ip" type="text" />
@@ -143,23 +144,37 @@
             </tbody>
         </table>
     </div>
-
-
-    <div id="write"></div>
     <script type="text/javascript">
-        $.ajax({
-            method: "GET",
-            beforeSend: function (request) {
-                request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
-            },
-            url: "plugin/geoMap/getDB"
-        })
-                .done(function (msg) {
-                    console.log("HOLY snack!!");
-                    console.log(msg);
-                    <!--return msg;-->
-                });
+        //<![CDATA[
+
+        $(document).ready(function(){
+            console.log("starting getDB.......");
+
+            getDB(function(data){
+                console.log("data");
+                console.log(data);
+                console.log(data[0]);
+                for(var x = 0; x < data . length; x++){
+                    console.log(data[x]['uname']);
+                }
+            });
+        });
+
+        function addElement (content) {
+            // create a new div element
+            // and give it some content
+            var newDiv = document.createElement("div");
+            var newContent = document.createTextNode(content);
+            newDiv.appendChild(newContent); //add the text node to the newly created div.
+
+            // add the newly created element and its content into the DOM
+            var currentDiv = document.getElementById("div1");
+            document.body.insertBefore(newDiv, currentDiv);
+            console.log("done???");
+        }
+        //]]>
     </script>
+
 
     <!--</script>-->
     <!--<sp:script enabled="false"-->

@@ -2,12 +2,15 @@ package sailpoint.plugin.geomap.rest;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sailpoint.api.SailPointContext;
 import sailpoint.api.SailPointFactory;
 import sailpoint.object.Attributes;
@@ -115,7 +118,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
             log.error(e);
 //            throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
-
         return success;
     }
 
@@ -190,6 +192,37 @@ public class GeoMapResource extends AbstractPluginRestResource {
     }
 
 
+    public  String rStoJason(ResultSet rs) throws SQLException
+    {
+        if(rs.first() == false) {return "[]";} else {rs.beforeFirst();} // empty rs
+        StringBuilder sb=new StringBuilder();
+        Object item; String value;
+        java.sql.ResultSetMetaData rsmd = rs.getMetaData();
+        int numColumns = rsmd.getColumnCount();
+
+        sb.append("[{");
+        while (rs.next()) {
+
+            for (int i = 1; i < numColumns + 1; i++) {
+                String column_name = rsmd.getColumnName(i);
+                item=rs.getObject(i);
+                if (item !=null )
+                {value = item.toString(); value=value.replace('"', '\'');}
+                else
+                {value = "null";}
+                sb.append("\"" + column_name+ "\":\"" + value +"\",");
+
+            }                                   //end For = end record
+
+            sb.setCharAt(sb.length()-1, '}');   //replace last comma with curly bracket
+            sb.append(",{");
+        }                                      // end While = end resultset
+
+        sb.delete(sb.length()-3, sb.length()); //delete last two chars
+        sb.append("}]");
+
+        return sb.toString();
+    }
 
     /**
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
@@ -197,8 +230,9 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @GET
     @Path("getDB")
     @Produces(MediaType.APPLICATION_JSON)
-    public ResultSet
+    public String
     getDB() throws GeneralException {
+//        JSONArray ans = null;
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
@@ -208,12 +242,16 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                System.out.println("THIS IS WHAT IT IS ################# " + rs);
-                return rs;
+//                ans = convertToJSON(rs);
+                System.out.println("inside asskajksasadsjaklsajkjsadlkjsadljdsal get db");
+                return rStoJason(rs);
             }
+//            System.out.println(ans.toString() + " WITHIN TE FUNCTION GET DB!!!!!");
+//            return ans.toString();
         } catch (Exception e) {
             log.error(e);
         }
         return null;
+//        return ans.toString();
     }
 }

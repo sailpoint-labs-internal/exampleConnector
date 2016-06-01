@@ -36,3 +36,18 @@ function get_location2(val, callback) {
             // return msg;
         });
 };
+
+
+function getDB(callback) {
+    $.ajax({
+        method: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+        },
+        url: "plugin/geoMap/getDB"
+    }).done(function (msg) {
+        var x = JSON.parse(msg);
+        callback(x);
+    });
+};
+
