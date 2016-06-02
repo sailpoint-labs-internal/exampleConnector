@@ -35,6 +35,24 @@ var IPMapper = {
             IPMapper.addIPMarker(ipArray[i]);
         }
     },
+    addIPMarkerCustom: function (ip) {
+        // note* this will make another external call
+        $.ajax({
+            method: "GET",
+            crossDomain: true,
+            dataType : 'jsonp',
+            url: "http://freegeoip.net/json/"+ip
+            // url: "plugin/geoMap/processLoginUsingHeaders"
+        })
+            .done(function (jsonObj) {
+                var json = JSON.stringify(jsonObj);
+                console.log(json);
+                // IPMapper.placeIPMarker(json['latitude'], json['longitude'], "{\"region_name\":"+ json['region_name'] + "\",city\":" + json['city']+ ",\"zip_code:\""+ json['zip_code']+"}");
+                IPMapper.placeIPMarkerFromJSON(json);
+                console.log("ADDING CUSTOM!!");
+            })
+
+    },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
         marker.setPosition(latlng);
         google.maps.event.addListener(marker, 'click', function() {
@@ -77,38 +95,37 @@ var IPMapper = {
             });
         }
     },
-    
+
     placeIPMarkerFromJSON: function(json) {
-        console.log(json + " is json");
         var pairs= $.parseJSON(json);
+        function place(data) {
+            // console.log(json);
+            var latitude = data.latitude;
+            var longitude = data.longitude;
+            var contentString = "";
+            $.each(data, function (key, val) {
+                contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
+            });
+            var latlng = new google.maps.LatLng(latitude, longitude);
+            var marker = new google.maps.Marker({ //create Map Marker
+                map: IPMapper.map,
+                draggable: false,
+                position: latlng
+            });
+            IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+        }
         if (pairs && pairs.constructor === Array) {
             for (var x = 0; x < pairs.length; x++) {
-                console.log(pairs[x] + " is iterating");
-                console.dir(pairs[x] + " is iterating");
+                // console.log(pairs[x] + " is iterating");
+                // console.dir(pairs[x] + " is iterating");
                 place(pairs[x]);
-            }
-            function place(data) {
-                // console.log(json);
-                var latitude = data.latitude;
-                var longitude = data.longitude;
-                var contentString = "";
-                $.each(data, function (key, val) {
-                    contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
-                });
-                var latlng = new google.maps.LatLng(latitude, longitude);
-                var marker = new google.maps.Marker({ //create Map Marker
-                    map: IPMapper.map,
-                    draggable: false,
-                    position: latlng
-                });
-                IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
             }
         }
         else if(pairs){
-            console.log("poor pairs ", pairs);
+            place(pairs);
         }
         else{
-            console.log("fml");
+            throw "Error: bad ip data!";
         }
     }
 }

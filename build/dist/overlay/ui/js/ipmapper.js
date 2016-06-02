@@ -16,14 +16,15 @@ var IPMapper = {
 		var mapOptions = {
 			zoom: 1,
 			center: latlng,
-			mapTypeId: IPMapper.mapTypeId
+			mapTypeId: IPMapper.mapTypeId,
+			styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}]
 		}
 		//init Map
 		IPMapper.map = new google.maps.Map(document.getElementById(mapId), mapOptions);
 		//init info window
 		IPMapper.infowindow = new google.maps.InfoWindow();
 		//info window close event
-		google.maps.event.addListener(IPMapper.infowindow, 'closeclick', function () {
+		google.maps.event.addListener(IPMapper.infowindow, 'closeclick', function() {
 			IPMapper.map.fitBounds(IPMapper.latlngbound);
 			IPMapper.map.panToBounds(IPMapper.latlngbound);
 		});
@@ -35,7 +36,7 @@ var IPMapper = {
 			IPMapper.addIPMarker(ipArray[i]);
 		}
 	},
-	addIPMarker: function (ip) {
+	addIPMarker2: function (ip) {
 		ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 		if ($.trim(ip) != '' && ipRegex.test(ip)) { //validate IP Address format
 			var url = encodeURI(IPMapper.baseUrl + ip + "?callback=?"); //geocoding url

@@ -138,8 +138,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Consumes("application/x-www-form-urlencoded")
     public Response processLogin(@FormParam("json") String json) throws GeneralException, JSONException {
         String session_id = getRequest().getSession().getId();
-        System.out.println("mnew iter");
-
+        System.out.println("process login +");
         //store the result of geoip and plot it
         JSONObject test = new JSONObject(json);
         String ip_online = test.getString("ip");
@@ -227,17 +226,18 @@ public class GeoMapResource extends AbstractPluginRestResource {
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
 
-            String sql = "SELECT uname, lat, lng FROM geo_table";
+            String sql = "SELECT uname, ip_online, lat, lng FROM geo_table";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
                 while (rs.next()) {
 
                     String uname = rs.getString("uname");
+                    String ip_addr = rs.getString("ip_online");
                     double lat = rs.getDouble("lat");
                     double lng = rs.getDouble("lng");
                     System.out.println("pair == : " + lat + " " + lng);
-                    ret.add(String.format("{\"User Name\":\"%s\", \"latitude\":%f, \"longitude\":%f}", uname, lat, lng));
+                    ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"latitude\":%f, \"longitude\":%f}", uname, ip_addr, lat, lng));
                 }
                 System.out.println(ret.toString() + " this should be all ");
             }
@@ -253,7 +253,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
     public  String rStoJason(ResultSet rs) throws SQLException
     {
-        if(rs.first() == false) {return "[]";} else {rs.beforeFirst();} // empty rs
+        if(!rs.first()) {return "[]";} else {rs.beforeFirst();} // empty rs
         StringBuilder sb=new StringBuilder();
         Object item; String value;
         java.sql.ResultSetMetaData rsmd = rs.getMetaData();

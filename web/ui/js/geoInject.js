@@ -21,7 +21,8 @@ $(document).ready(function () {
                     json: json
                 }
             }).done(function(out){
-                alert(out);
+                console.log(out);
+                // alert(out);
 
             });
         });
