@@ -43,8 +43,9 @@ function getDB(callback) {
         },
         url: "plugin/geoMap/getDB"
     }).done(function (msg) {
-        var x = JSON.parse(msg);
-        callback(x);
+        // callback(JSON.stringify(msg));
+        // var x = JSON.parse(msg);
+        callback(msg);
     });
 };
 

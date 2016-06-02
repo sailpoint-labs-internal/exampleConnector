@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 //import sailpoint.plugin.rest.jaxrs.AllowAll;
 
@@ -226,18 +227,19 @@ public class GeoMapResource extends AbstractPluginRestResource {
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
 
-            String sql = "SELECT uname, ip_online, lat, lng FROM geo_table";
+            String sql = "SELECT uname, ip_online, login_time, lat, lng FROM geo_table";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
                 while (rs.next()) {
 
                     String uname = rs.getString("uname");
+                    Date login_time = rs.getTimestamp("login_time");
                     String ip_addr = rs.getString("ip_online");
                     double lat = rs.getDouble("lat");
                     double lng = rs.getDouble("lng");
                     System.out.println("pair == : " + lat + " " + lng);
-                    ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"latitude\":%f, \"longitude\":%f}", uname, ip_addr, lat, lng));
+                    ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"Login Time\":\"%s\", \"latitude\":%f, \"longitude\":%f}", uname, ip_addr, login_time.toString(), lat, lng));
                 }
                 System.out.println(ret.toString() + " this should be all ");
             }
@@ -291,7 +293,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String
     getDB() throws GeneralException {
-//        JSONArray ans = null;
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
@@ -301,17 +302,12 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-//                ans = convertToJSON(rs);
-                System.out.println("inside asskajksasadsjaklsajkjsadlkjsadljdsal get db");
                 return rStoJason(rs);
             }
-//            System.out.println(ans.toString() + " WITHIN TE FUNCTION GET DB!!!!!");
-//            return ans.toString();
         } catch (Exception e) {
             log.error(e);
         }
         return null;
-//        return ans.toString();
     }
 
 }

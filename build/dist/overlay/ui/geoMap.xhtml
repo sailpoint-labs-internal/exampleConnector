@@ -39,123 +39,67 @@
 
         <src>mod.ipmapper.js</src>
         <src>queryMap.js</src>
+        <src>jquery.dynatable.js</src>
         </sp:script>
 
         <script type="text/javascript">
             $(document).ready(function(){
                 try{
                     IPMapper.initializeMap("map");
-//                    IPMapper.placeIPMarkerFromJSON("{'latitude':30.4,'longitude':-97.7528}");
-//                    IPMapper.placeIPMarkerFromJSON(JSON.stringify({latitude:30.4,longitude:-97.7528}));
-
-
-                    get_locations(function(data){
-                        console.log(data + " is data in geomap page");
-                        IPMapper.placeIPMarkerFromJSON("["+data+"]");
-                    });
-//                    Console.log(get_location());
-//                    var g = get_location(setter);
-//                    function setter (msg){
-//
-//                        msg.forEach(function(entry) {
-//                            console.log(entry + " from within ");
-//                            try {
-//                                placeIPMarkerFromJSON
-//                                IPMapper.addIPMarker(entry);
-//                            }catch(err){
-//
-//                                console.log("bad ip " + err);
-//                            }
-//                        });
-//                    }
-                    } catch(e){
-                        console.log(e);
-                    }
-                });
-
-//            function search_name(val){
-//                try{
-//                    IPMapper.initializeMap("map");
-////                    Console.log(get_location());
-//                    var g = get_location2(val, setter);
-//                    console.log("sending value ", val);
-//                    function setter (msg){
-//
-//                        msg.forEach(function(entry) {
-//                            console.log(entry + " from within ");
-//                            try {
-//                                IPMapper.addIPMarker(entry);
-//                            }catch(err){
-//                                console.log("bad ip " + err);
-//                            }
-//                        });
-//                    }
-//                } catch(e){
-//                    console.log(e);
-//                }
-//            };
-
+                        get_locations(function(data){
+                            console.log(data + " is data in geomap page");
+                            IPMapper.placeIPMarkerFromJSON("["+data+"]");
+                        });
+                }catch(e){
+                    console.log(e);
+                }
+            });
         </script>
-    <input id="ip" name="ip" type="text" />
+
+    <div style="padding-left: 5px">
+    <input id="ip" name="ip" type="text"/>
     <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
-    <input id="regName" name="regName" type="text" />
+
+    <input id="regName" name="regName" type="text"/>
     <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>
+    </div>
+
     <div id="buffer" style="height: 3px"></div>
-    <div id="map" style="height: 600px;"></div>
+    <div id="map" style="height: 700px;"></div>
 
-    <div>
-
-    <h2> other formatting items </h2>
-
-        <table id="myTable" class="tablesorter">
+    <div style="padding-left: 20px">
+    <!--<h2> other formatting items </h2>-->
+        <table id="myTable" class="table">
             <thead>
             <tr>
-                <th>User Name</th>
-                <th>IP Address</th>
-                <th>Session ID</th>
-                <th>Browser Agent</th>
-                <th>Login Time</th>
+                <th>uname</th>
+                <th>session_id</th>
+                <th>ip_address</th>
+                <th>login_time</th>
+                <th>lat</th>
+                <th>lng</th>
+                <th>ip_online</th>
             </tr>
             </thead>
             <tbody>
-
-
-
-
-
-
-            <!--<tr>-->
-                <!--<td>Smith</td>-->
-                <!--<td>John</td>-->
-                <!--<td>jsmith@gmail.com</td>-->
-                <!--<td>$50.00</td>-->
-                <!--<td>http://www.jsmith.com</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td>Bach</td>-->
-                <!--<td>Frank</td>-->
-                <!--<td>fbach@yahoo.com</td>-->
-                <!--<td>$50.00</td>-->
-                <!--<td>http://www.frank.com</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td>Doe</td>-->
-                <!--<td>Jason</td>-->
-                <!--<td>jdoe@hotmail.com</td>-->
-                <!--<td>$100.00</td>-->
-                <!--<td>http://www.jdoe.com</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td>Conway</td>-->
-                <!--<td>Tim</td>-->
-                <!--<td>tconway@earthlink.net</td>-->
-                <!--<td>$50.00</td>-->
-                <!--<td>http://www.timconway.com</td>-->
-            <!--</tr>-->
             </tbody>
         </table>
     </div>
+
     <script type="text/javascript">
+        getDB(function(data){
+                console.log(data + " is the data in geoPage");
+
+            var $records = $('#json-records'), myRecords = JSON.parse(data);
+
+            $('#myTable').dynatable({
+                dataset: {
+                    records: myRecords
+                }
+            });
+
+        });
+
         //<![CDATA[
         //TODO: uncomment this!
 
