@@ -4,6 +4,7 @@ CREATE  TABLE `geo_table` (
   `uname` VARCHAR(255) NOT NULL ,
   `session_id` VARCHAR(255) NOT NULL ,
   `ip_address` VARCHAR(255) NOT NULL ,
+  `identity` VARCHAR(255),
   `login_time` TIMESTAMP NOT NULL,
   `lat` DOUBLE (16,5),
   `lng` DOUBLE (16,5),
