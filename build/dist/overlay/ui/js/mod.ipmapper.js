@@ -141,13 +141,29 @@ var IPMapper = {
             throw "Error: bad ip data!";
         }
     },
-    swapColor: function(name){
-        if(allMarkers){
-            for(var x =0; x<allMarkers.length;x++){
-                if(allMarkers[x].title.indexOf(name) > -1) {
-                    allMarkers[x].icon.fillColor("0000cc");
-                    console.log(allMarkers[x].name);
+    swap_color: function(name){
+        for(var x =0; x<allMarkers.length; x++){
+            if(allMarkers[x].title.search(new RegExp(name, "i")) > -1){
+                console.log(allMarkers[x].name);
+                var icon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 7.0,
+                    fillColor: "#000000",
+                    animation: google.maps.Animation.DROP,
+                    fillOpacity: 0.7,
+                    strokeWeight: 0.6
                 }
+                allMarkers[x].setIcon(icon);
+            }
+            else{
+                var icon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 6.5,
+                    fillColor: "#F00",
+                    fillOpacity: 0.4,
+                    strokeWeight: 0.4
+                }
+                allMarkers[x].setIcon(icon);
             }
         }
     }
