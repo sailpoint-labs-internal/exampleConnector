@@ -3,6 +3,8 @@
  * http://lab.abhinayrathore.com/ipmapper/
  * Last Updated: June 13, 2012
  */
+
+var allMarkers = [];
 var IPMapper = {
     map: null,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -16,6 +18,7 @@ var IPMapper = {
         var mapOptions = {
             zoom: 1,
             center: latlng,
+            styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#2BA4C7"},{"visibility":"on"}]}],
             mapTypeId: IPMapper.mapTypeId
         }
         //init Map
@@ -97,7 +100,6 @@ var IPMapper = {
     },
 
     placeIPMarkerFromJSON: function(json) {
-        var pairs= $.parseJSON(json);
         function place(data) {
             // console.log(json);
             var latitude = data.latitude;
@@ -110,14 +112,25 @@ var IPMapper = {
             var marker = new google.maps.Marker({ //create Map Marker
                 map: IPMapper.map,
                 draggable: false,
-                position: latlng
-            });
+                position: latlng,
+                title: (data["User Name"]||data["ip"]),
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                        scale: 6.5,
+                        fillColor: "#F00",
+                        fillOpacity: 0.4,
+                        strokeWeight: 0.4
+                }
+            })
+            // IPMapper.placeIPMarker(marker, latlng, contentString).done(allMarkers.push(marker)); //place Marker on Map
             IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+            if(marker){
+                allMarkers.push(marker);
+            }
         }
+        var pairs= $.parseJSON(json);
         if (pairs && pairs.constructor === Array) {
             for (var x = 0; x < pairs.length; x++) {
-                // console.log(pairs[x] + " is iterating");
-                // console.dir(pairs[x] + " is iterating");
                 place(pairs[x]);
             }
         }
@@ -126,6 +139,14 @@ var IPMapper = {
         }
         else{
             throw "Error: bad ip data!";
+        }
+    },
+    swap_color: function(name){
+        for(var x =0; x<allMarkers.length;x++){
+            if(allMarkers[x].title.indexOf(name) > -1) {
+                allMarkers[x].icon.fillColor("0000cc");
+                console.log(allMarkers[x].name);
+            }
         }
     }
 }

@@ -29,15 +29,17 @@
         <!--<src>ng-modalDialog.css?#{debug.revision}</src>-->
     </sp:style>
 
-    <div id="hello"></div>
-    <h1> TEST </h1>
+    <!--<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'></link>-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'></link>
+    <div>
+    <h1> GeoCoordinate <span id="thins">Login System</span></h1>
+    </div>
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
-        <src>ipmapper.js</src>
+
         <src>mod.ipmapper.js</src>
         <src>queryMap.js</src>
         </sp:script>
-
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -94,13 +96,11 @@
 //            };
 
         </script>
-
     <input id="ip" name="ip" type="text" />
-    <button onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
-
+    <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
     <input id="regName" name="regName" type="text" />
-    <button onclick="search_name($('#regName').val());">Regex Filter name</button>
-
+    <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>
+    <div id="buffer" style="height: 3px"></div>
     <div id="map" style="height: 600px;"></div>
 
     <div>

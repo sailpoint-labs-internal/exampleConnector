@@ -17,3 +17,48 @@ tr{
     font-weight: bold;
 }
 
+h1{
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    font-size: 36px;
+}
+span#thins{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 36px;
+    display: inline-block;
+}
+
+
+button.cusbutton {
+    -webkit-appearance: none; /* Prevent native styling on iOS for disabled buttons */
+    -webkit-border-radius: 2px !important;
+    -moz-border-radius: 2px !important;
+    border-radius: 2px !important;
+    border: solid 1px #00799d !important;
+    color: #FFFFFF !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 10px 5px 10px !important;
+    cursor: pointer;
+    background-image: none !important;
+    background-color: #037da1 !important;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0097c4), color-stop(100%, #037da1)) !important;
+    background-image: -webkit-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -moz-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -o-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -ms-linear-gradient(top,#0097c4, #037da1) !important;
+    background-image: linear-gradient(top, #0097c4, #037da1) !important;
+}
+
+
+div#map{
+    border: 1px solid #3f618b;
+    border-right-width: 0;
+    border-left-width: 0;
+}
