@@ -126,9 +126,10 @@ public class GeoMapResource extends AbstractPluginRestResource {
             }
         } catch (Exception e) {
             log.error(e);
-            throw new GeneralException(e); //maybe don't throw so we can still return false?
+            System.out.println(e);
+//            return Response.ok().build();
+//            throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
-
         return Response.ok().build();
     }
 
@@ -174,37 +175,21 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @GET
     @Path("getLoginLocations/")
     @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<String>
     public String
     getLoginLocations() throws GeneralException, SQLException {
-//        ArrayList<String> ret = new ArrayList<String>();
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
 
-//             String sql = "SELECT uname, ip_online, login_time, lat, lng, identity FROM geo_table";
             String sql = "SELECT * FROM geo_table";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-//                while (rs.next()) {
-//
-//                    String uname = rs.getString("uname");
-//                    String identity = rs.getString("identity");
-//                    Date login_time = rs.getTimestamp("login_time");
-//                    String ip_addr = rs.getString("ip_online");
-//                    double lat = rs.getDouble("lat");
-//                    double lng = rs.getDouble("lng");
-//                    System.out.println("pair == : " + lat + " " + lng);
                     String ret = rStoJason(rs);
                     System.out.println(ret + " this should be all ");
                     return ret;
-//                     ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"Login Time\":\"%s\", \"latitude\":%f, \"longitude\":%f, \"Identity Url\":\"%s\"}", uname, ip_addr, login_time.toString(), lat, lng, identity));
-                }
-//                System.out.println(ret.toString() + " this should be all ");
-//                return ret;
-//            }
+            }
         } catch (Exception e) {
             System.out.println(e + " ERRORRR");
             log.error(e);
@@ -213,7 +198,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
     }
 
 
-    public String rStoJason(ResultSet rs) throws SQLException {
+    private String rStoJason(ResultSet rs) throws SQLException {
         if (!rs.first()) {
             return "[]";
         } else {

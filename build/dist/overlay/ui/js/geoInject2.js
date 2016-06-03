@@ -24,14 +24,13 @@ jQuery(document).ready(function(){
         );
 });
 
-
 function getDBhome(callback) {
     $.ajax({
         method: "GET",
         beforeSend: function (request) {
             request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
         },
-        url: "plugin/geoMap/getDB"
+        url: "plugin/geoMap/getLastLogin"
     }).done(function (msg) {
         var x = JSON.parse(msg);
         callback(x);
@@ -40,7 +39,11 @@ function getDBhome(callback) {
 
 getDBhome(function insertLogin(data){
     if(data) {
-        $("div[class='row m-b-sm m-t-sm home-header sp-page-header ng-scope']").prepend('<div style="float: left"><h1>Last Login</h1></div><br>');
+        data = data[0];
+        // $("div[class='row m-b-sm m-t-sm home-header sp-page-header ng-scope']").prepend('<div style="float: left"><h1>Last Login</h1></div><br>');
+        $('img.pull-right').replaceWith('<div id="lastLog" class="lastLog" style="display: inline; float: right; color: black">Last Login: '
+                + data['login_time'] + " ("+ data['country_code']+") " + data['city'] +", " + data['region_name'] +": "+data['zip_code']
+                +'</div>');
     }
-
 });
+

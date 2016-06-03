@@ -89,3 +89,10 @@ div#titleo{
     margin-top: 10px;
     position: relative;
 }
+
+/*div#lastLog{*/
+.lastLog{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+}
