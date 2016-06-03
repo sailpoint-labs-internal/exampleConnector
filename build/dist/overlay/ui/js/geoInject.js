@@ -8,7 +8,7 @@ $(document).ready(function () {
     })
         .done(function (jsonObj) {
             var json = JSON.stringify(jsonObj);
-            console.log(json);
+            // console.log(json);
 
             $.ajax({
                 type: "POST",
@@ -21,7 +21,7 @@ $(document).ready(function () {
                     json: json
                 }
             }).done(function(out){
-                console.log(out);
+                // console.log(out);
                 // alert(out);
 
             });

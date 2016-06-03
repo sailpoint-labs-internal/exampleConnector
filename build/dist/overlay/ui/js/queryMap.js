@@ -2,7 +2,6 @@
  * Created by maximilian.roquemore on 5/27/16.
  */
 function get_locations(callback) {
-    console.log("regular");
     $.ajax({
         method: "GET",
         beforeSend: function (request) {
@@ -11,7 +10,10 @@ function get_locations(callback) {
         url: "plugin/geoMap/getLoginLocations/"
     })
         .done(function (msg) {
+            // console.log(msg + " is insite getLocations");
+            // var x = JSON.parse(msg);
             // console.dir(msg);
+            // callback(x);
             callback(msg);
         });
 };

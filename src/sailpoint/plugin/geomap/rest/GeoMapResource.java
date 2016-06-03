@@ -69,7 +69,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
         if (plugin != null) {
             Attributes settingsAttrs = plugin.getConfigurableSettings();
             if (settingsAttrs.containsKey("Message")) {
-                message = (String)settingsAttrs.get("Message");
+                message = (String) settingsAttrs.get("Message");
             }
             message += " (" + _testCounter + ")"; //creates the geoMap(x) values
         }
@@ -79,6 +79,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
     /**
      * Return the jsessionId for current user
+     *
      * @param json
      */
     @POST
@@ -86,12 +87,20 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Consumes("application/x-www-form-urlencoded")
     public Response processLogin(@FormParam("json") String json) throws GeneralException, JSONException {
         String session_id = getRequest().getSession().getId();
-        System.out.println("process login +");
         //store the result of geoip and plot it
         JSONObject test = new JSONObject(json);
         String ip_online = test.getString("ip");
-        double lat = test.getDouble("latitude");
-        double lng = test.getDouble("longitude");
+        double latitude = test.getDouble("latitude");
+        double longitude = test.getDouble("longitude");
+        String country_code = test.getString("country_code");
+        String country_name = test.getString("country_name");
+        String region_code = test.getString("region_code");
+        String region_name = test.getString("region_name");
+        String city = test.getString("city");
+        String zip_code = test.getString("zip_code");
+        String time_zone = test.getString("time_zone");
+
+        //country_code":"US","country_name":"United States","region_code":"TX","region_name":"Texas","city":"Austin","zip_code":"78759","time_zone":"America/Chicago","latitude":30.4,"longitude":-97.7528,"metro_code":635}
 
         String ip_address = request.getHeader("X-FORWARDED-FOR");
         if (ip_address == null) {
@@ -108,15 +117,14 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 Connection conn = context.getJdbcConnection();
 
                 String uname = loggedInUser.getDisplayName();
-                String sql = String.format("insert into geo_table (uname, session_id, ip_address, identity, login_time, lat, lng, ip_online) values ('%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s');", uname, session_id, ip_address, identity_id, lat, lng, ip_online);
+                String sql = String.format("insert into geo_table (user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", uname, session_id, ip_address, identity_id, latitude, longitude, ip_online,  country_code, country_name, region_code, region_name, city, zip_code, time_zone);
 
                 try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.executeUpdate(sql);
                     System.out.println("insert complete! ----- ALL VALID!!");
                 }
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             log.error(e);
             throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
@@ -166,47 +174,54 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @GET
     @Path("getLoginLocations/")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<String>
-//    public String
-    getLoginLocations( ) throws GeneralException{
-        ArrayList<String> ret = new ArrayList<String>();
+//    public ArrayList<String>
+    public String
+    getLoginLocations() throws GeneralException, SQLException {
+//        ArrayList<String> ret = new ArrayList<String>();
         try {
             System.out.println("Uploading DB to map...");
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
 
-            String sql = "SELECT uname, ip_online, login_time, lat, lng, identity FROM geo_table";
+//             String sql = "SELECT uname, ip_online, login_time, lat, lng, identity FROM geo_table";
+            String sql = "SELECT * FROM geo_table";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
-            try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
-                while (rs.next()) {
-
-                    String uname = rs.getString("uname");
-                    String identity = rs.getString("identity");
-                    Date login_time = rs.getTimestamp("login_time");
-                    String ip_addr = rs.getString("ip_online");
-                    double lat = rs.getDouble("lat");
-                    double lng = rs.getDouble("lng");
-                    System.out.println("pair == : " + lat + " " + lng);
-                    ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"Login Time\":\"%s\", \"latitude\":%f, \"longitude\":%f, \"Identity Url\":\"%s\"}", uname, ip_addr, login_time.toString(), lat, lng, identity));
+            try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+//                while (rs.next()) {
+//
+//                    String uname = rs.getString("uname");
+//                    String identity = rs.getString("identity");
+//                    Date login_time = rs.getTimestamp("login_time");
+//                    String ip_addr = rs.getString("ip_online");
+//                    double lat = rs.getDouble("lat");
+//                    double lng = rs.getDouble("lng");
+//                    System.out.println("pair == : " + lat + " " + lng);
+                    String ret = rStoJason(rs);
+                    System.out.println(ret + " this should be all ");
+                    return ret;
+//                     ret.add(String.format("{\"User Name\":\"%s\", \"IP Address\":\"%s\", \"Login Time\":\"%s\", \"latitude\":%f, \"longitude\":%f, \"Identity Url\":\"%s\"}", uname, ip_addr, login_time.toString(), lat, lng, identity));
                 }
-                System.out.println(ret.toString() + " this should be all ");
-            }
-            return ret;
-        }
-        catch(Exception e){
+//                System.out.println(ret.toString() + " this should be all ");
+//                return ret;
+//            }
+        } catch (Exception e) {
             System.out.println(e + " ERRORRR");
             log.error(e);
         }
-        return ret;
+        return null;
     }
 
 
-    public  String rStoJason(ResultSet rs) throws SQLException
-    {
-        if(!rs.first()) {return "[]";} else {rs.beforeFirst();} // empty rs
-        StringBuilder sb=new StringBuilder();
-        Object item; String value;
+    public String rStoJason(ResultSet rs) throws SQLException {
+        if (!rs.first()) {
+            return "[]";
+        } else {
+            rs.beforeFirst();
+        } // empty rs
+        StringBuilder sb = new StringBuilder();
+        Object item;
+        String value;
         java.sql.ResultSetMetaData rsmd = rs.getMetaData();
         int numColumns = rsmd.getColumnCount();
 
@@ -215,20 +230,22 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
             for (int i = 1; i < numColumns + 1; i++) {
                 String column_name = rsmd.getColumnName(i);
-                item=rs.getObject(i);
-                if (item !=null )
-                {value = item.toString(); value=value.replace('"', '\'');}
-                else
-                {value = "null";}
-                sb.append("\"" + column_name+ "\":\"" + value +"\",");
+                item = rs.getObject(i);
+                if (item != null) {
+                    value = item.toString();
+                    value = value.replace('"', '\'');
+                } else {
+                    value = "null";
+                }
+                sb.append("\"" + column_name + "\":\"" + value + "\",");
 
             }                                   //end For = end record
 
-            sb.setCharAt(sb.length()-1, '}');   //replace last comma with curly bracket
+            sb.setCharAt(sb.length() - 1, '}');   //replace last comma with curly bracket
             sb.append(",{");
         }                                      // end While = end resultset
 
-        sb.delete(sb.length()-3, sb.length()); //delete last two chars
+        sb.delete(sb.length() - 3, sb.length()); //delete last two chars
         sb.append("}]");
 
         return sb.toString();
@@ -259,4 +276,32 @@ public class GeoMapResource extends AbstractPluginRestResource {
         return null;
     }
 
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
+    @GET
+    @Path("getLastLogin")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String
+    getLastLogin() throws GeneralException, SQLException {
+        try {
+            Identity loggedInUser = getLoggedInUser();
+            if (loggedInUser != null) {
+                System.out.println("Connecting getting last login...");
+                SailPointContext context = SailPointFactory.getCurrentContext();
+                Connection conn = context.getJdbcConnection();
+                String uname = loggedInUser.getDisplayName();
+
+                String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1 offset 1;";
+
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                    return rStoJason(rs);
+                }
+            }
+        }catch(Exception e){
+            log.error(e);
+        }
+        return null;
+    }
 }

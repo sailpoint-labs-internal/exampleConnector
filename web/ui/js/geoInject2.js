@@ -24,53 +24,23 @@ jQuery(document).ready(function(){
         );
 });
 
-// // console.log("I AM STILL RUNNING!!!>");
-// $(document).ready(function () {
-//     $.ajax({
-//         method: "GET",
-//         beforeSend: function (request) {
-//             request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
-//         },
-//         url: "plugin/geoMap/processLogin"
-//     })
-//         .done(function (msg) {
-//             console.log(msg);
-//         });
-// });
 
-//run this ^ 1x on home page
-//every other doc we need to check that session is still the same
+function getDBhome(callback) {
+    $.ajax({
+        method: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+        },
+        url: "plugin/geoMap/getDB"
+    }).done(function (msg) {
+        var x = JSON.parse(msg);
+        callback(x);
+    });
+};
 
-// console.log("PATH IS !!!!");
-// console.log(top.location.pathname);
-// if (top.location.pathname === '/my/path')
-// {
+getDBhome(function insertLogin(data){
+    if(data) {
+        $("div[class='row m-b-sm m-t-sm home-header sp-page-header ng-scope']").prepend('<div style="float: left"><h1>Last Login</h1></div><br>');
+    }
 
-//
-// if(top.location.pathname === '/identityiq/home.jsf'){
-//
-//
-// }
-
-// var geoMapUrl = SailPoint.CONTEXT_PATH + '/pluginPage.jsf?pn=GeoMap';
-
-// jQuery(document).ready(function(){
-//     jQuery("ul.navbar-right li:first")
-//         .before(
-//             '<li class="dropdown">' +
-//             '		<a href="' + geoMapUrl + '" tabindex="0" role="menuitem" data-snippet-debug="off">' +
-//             '			<i role="presenation" class="fa fa-exclamation fa-lg example"></i>' +
-//             '		</a>' +
-//             '</li>'
-//         );
-// });
-// console.log("I AM STILL RUNNING!!!>");
-//
-
-//bla bla angular
-// alert("PLUGIN 2");
-
-console.log("Starting");
-
-
-// https://developers.google.com/maps/documentation/javascript/examples/
+});

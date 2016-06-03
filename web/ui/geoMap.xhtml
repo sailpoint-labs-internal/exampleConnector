@@ -31,8 +31,23 @@
 
     <!--<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'></link>-->
     <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'></link>
-    <div>
-    <h1> GeoCoordinate <span id="thins">Login System</span></h1>
+    <div style="height: 8px"></div>
+    <div id="titleo" style="display: inline">
+
+        <div id="c1">
+                <input id="ip" name="ip" type="text"/>
+                <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
+                <input id="regName" name="regName" type="text"/>
+                <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>
+        </div>
+
+        <div id="c2">
+        <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
+        </div>
+
+        <div id="c3">
+        </div>
+
     </div>
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
@@ -47,8 +62,7 @@
                 try{
                     IPMapper.initializeMap("map");
                         get_locations(function(data){
-                            console.log(data + " is data in geomap page");
-                            IPMapper.placeIPMarkerFromJSON("["+data+"]");
+                            IPMapper.placeIPMarkerFromJSON(data);
                         });
                 }catch(e){
                     console.log(e);
@@ -56,29 +70,30 @@
             });
         </script>
 
-    <div style="padding-left: 5px">
-    <input id="ip" name="ip" type="text"/>
-    <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
+    <!--<div style="padding-left: 5px">-->
+    <!--&lt;!&ndash;<div style="float: left">&ndash;&gt;-->
+    <!--<input id="ip" name="ip" type="text"/>-->
+    <!--<button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>-->
 
-    <input id="regName" name="regName" type="text"/>
-    <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>
-    </div>
+    <!--<input id="regName" name="regName" type="text"/>-->
+    <!--<button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>-->
+    <!--</div>-->
 
-    <div id="buffer" style="height: 3px"></div>
-    <div id="map" style="height: 700px;"></div>
+    <div style="height: 2px"></div>
+    <div id="map" style="height: 750px;"></div>
 
     <div style="padding-left: 20px">
     <!--<h2> other formatting items </h2>-->
         <table id="myTable" class="table">
             <thead>
             <tr>
-                <th>uname</th>
-                <th>session_id</th>
-                <th>ip_address</th>
-                <th>login_time</th>
-                <th>lat</th>
-                <th>lng</th>
-                <th>ip_online</th>
+                <th>User Name</th>
+                <th>Session Id</th>
+                <th>IP Header</th>
+                <th>Login Time</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>IP</th>
             </tr>
             </thead>
             <tbody>
@@ -87,17 +102,25 @@
     </div>
 
     <script type="text/javascript">
-        getDB(function(data){
-                console.log(data + " is the data in geoPage");
+        getDB(function(data) {
+//                console.log(data + " is the data in geoPage");
 
             var $records = $('#json-records'), myRecords = JSON.parse(data);
 
+            $.dynatableSetup({
+                table: {
+                    defaultColumnIdStyle: 'underscore'
+                }
+            });
             $('#myTable').dynatable({
                 dataset: {
                     records: myRecords
+                },
+                table: {
+                    defaultColumnIdStyle: 'underscore'
                 }
-            });
 
+            });
         });
 
         //<![CDATA[

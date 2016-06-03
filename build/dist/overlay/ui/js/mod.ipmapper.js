@@ -49,10 +49,10 @@ var IPMapper = {
         })
             .done(function (jsonObj) {
                 var json = JSON.stringify(jsonObj);
-                console.log(json);
+                // console.log(json);
                 // IPMapper.placeIPMarker(json['latitude'], json['longitude'], "{\"region_name\":"+ json['region_name'] + "\",city\":" + json['city']+ ",\"zip_code:\""+ json['zip_code']+"}");
                 IPMapper.placeIPMarkerFromJSON(json);
-                console.log("ADDING CUSTOM!!");
+                // console.log("ADDING CUSTOM!!");
             })
 
     },
@@ -103,21 +103,24 @@ var IPMapper = {
         function place(data) {
             var latitude = data.latitude;
             var longitude = data.longitude;
+            // var latitude = data.lat;
+            // var longitude = data.lng;
             var contentString = "";
-            $.each(data, function (key, val) {
-                if(key == "Identity Url"){
-                    contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> <a href="/identityiq/define/identity/identity.jsf?id='+val+'"> User Identity</a><br />';
+            $.each(data, function mark(key, val) {
+                // if(key == "Identity Url"){
+                if(key == "identity"){
+                    contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> <a href="/identityiq/define/identity/identity.jsf?id='+val+'">'+val+'</a><br />';
                 }
                 else {
                     contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
                 }
-            });
+            })
             var latlng = new google.maps.LatLng(latitude, longitude);
             var marker = new google.maps.Marker({ //create Map Marker
                 map: IPMapper.map,
                 draggable: false,
                 position: latlng,
-                title: (data["User Name"]||data["ip"]),
+                title: (data["user_name"]||data["ip"]),
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
                         scale: 6.5,
@@ -130,7 +133,6 @@ var IPMapper = {
             IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
             if(marker){
                 allMarkers.push(marker);
-                console.log("CONTENT IS " + contentString);
             }
         }
         var pairs= $.parseJSON(json);
@@ -147,28 +149,37 @@ var IPMapper = {
         }
     },
     swap_color: function(name){
-        for(var x =0; x<allMarkers.length; x++){
-            if(allMarkers[x].title.search(new RegExp(name, "i")) > -1){
-                console.log(allMarkers[x].name);
-                var icon = {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 7.0,
-                    fillColor: "#000000",
-                    animation: google.maps.Animation.DROP,
-                    fillOpacity: 0.7,
-                    strokeWeight: 0.6
-                }
-                allMarkers[x].setIcon(icon);
+        var icon1 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6.5,
+            fillColor: "#F00",
+            fillOpacity: 0.4,
+            strokeWeight: 0.4
+        }
+        var icon2 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7.0,
+            fillColor: "#000000",
+            animation: google.maps.Animation.DROP,
+            fillOpacity: 0.7,
+            strokeWeight: 0.6
+        }
+
+        if(name == ''){
+            for(var x =0; x<allMarkers.length; x++){
+                allMarkers[x].setIcon(icon1);
             }
-            else{
-                var icon = {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 6.5,
-                    fillColor: "#F00",
-                    fillOpacity: 0.4,
-                    strokeWeight: 0.4
+
+        }
+        else {
+            for (var x = 0; x < allMarkers.length; x++) {
+                if (allMarkers[x].title.search(new RegExp(name, "i")) > -1) {
+                    console.log(allMarkers[x].name);
+                    allMarkers[x].setIcon(icon2);
                 }
-                allMarkers[x].setIcon(icon);
+                else {
+                    allMarkers[x].setIcon(icon1);
+                }
             }
         }
     }
