@@ -30,7 +30,7 @@ import java.util.Date;
 
 
 /**
- * @author nick.wellinghoff
+ * @author maximilian.roquemore
  */
 
 
@@ -127,47 +127,9 @@ public class GeoMapResource extends AbstractPluginRestResource {
         } catch (Exception e) {
             log.error(e);
             System.out.println(e);
-//            return Response.ok().build();
-//            throw new GeneralException(e); //maybe don't throw so we can still return false?
         }
         return Response.ok().build();
     }
-
-//    /**
-//     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
-//     */
-//    @GET
-//    @Path("getLoginLocations/{uname}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<String>
-//    getLoginLocations(
-//            @PathParam("uname") String uname
-//    ) throws GeneralException{
-//        ArrayList<String> ips = new ArrayList<String>();
-//        try {
-//            System.out.println("Uploading DB to map...");
-//            SailPointContext context = SailPointFactory.getCurrentContext();
-//            Connection conn = context.getJdbcConnection();
-//            String sql = "select * from geo_table where uname like '%"+ uname+"%';";
-//
-//            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-//            try(java.sql.ResultSet rs = stmt.executeQuery(sql)){
-//                while (rs.next()) {
-//                    //Retrieve by column name
-//                    String ip_address = rs.getString("ip_address");
-//                    System.out.println("ip_address: " + ip_address);
-//                    ips.add(ip_address);
-//                    System.out.println(ips.toString() + " is arraylist");
-//                }
-//            }
-//            return ips;
-//        }
-//        catch(Exception e){
-//            log.error(e);
-//        }
-//        return ips;
-//    }
-
 
     /**
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
@@ -187,7 +149,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
                     String ret = rStoJason(rs);
-                    System.out.println(ret + " this should be all ");
                     return ret;
             }
         } catch (Exception e) {
