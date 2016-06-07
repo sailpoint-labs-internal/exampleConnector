@@ -3,8 +3,12 @@
  * http://lab.abhinayrathore.com/ipmapper/
  * Last Updated: June 13, 2012
  */
-
+var apolygon = null;
 var allMarkers = [];
+var polygons = [];
+var allBanned = [];
+
+
 var IPMapper = {
     map: null,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -28,7 +32,7 @@ var IPMapper = {
         
         //this block controls drawing functions
         var drawingManager = new google.maps.drawing.DrawingManager({
-            drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingMode: null,
             drawingControl: true,
             drawingControlOptions: {
                 position: google.maps.ControlPosition.TOP_CENTER,
@@ -42,19 +46,82 @@ var IPMapper = {
             },
             markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
             circleOptions: {
-                fillColor: '#ffff00',
-                fillOpacity: 1,
-                strokeWeight: 5,
-                clickable: false,
+                fillColor: '#99ff66',
+                fillOpacity: .5,
+                strokeWeight: 2,
+                clickable: true,
                 editable: true,
-                zIndex: 1
+                zIndex: 1,
+                strokeColor:'green'
+            },
+            polygonOptions:{
+                fillColor: '#F00',
+                fillOpacity: .4,
+                strokeWeight: 2,
+                clickable: true,
+                editable: true,
+                draggable: true,
+                strokeColor:'#800000'
+            },
+            rectangleOptions:{
+                fillColor: '#F00',
+                fillOpacity: .4,
+                strokeWeight: 2,
+                clickable: true,
+                editable: true,
+                draggable: true,
+                strokeColor:'#800000'
             }
+
         });
         drawingManager.setMap(this.map);
         //info window close event
         google.maps.event.addListener(IPMapper.infowindow, 'closeclick', function() {
             IPMapper.map.fitBounds(IPMapper.latlngbound);
             IPMapper.map.panToBounds(IPMapper.latlngbound);
+        });
+
+        //listen for user to finish drawing polygon
+        google.maps.event.addListener(drawingManager,'polygoncomplete',function(polygon) {
+            for(var x = 0; x < allMarkers.length; x++) {
+                if(google.maps.geometry.poly.containsLocation(allMarkers[x].getPosition(), polygon)){
+                    updateBans(allMarkers[x]);
+                }
+            }
+            var coords = google.maps.geometry.encoding.encodePath(polygon.getPath());
+            var toStore = JSON.stringify({"type": "POLYGON", "path": coords});
+            $.ajax({
+                type: "POST",
+                contentType:"application/x-www-form-urlencoded",
+                url: "plugin/geoMap/processShape",
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+                },
+                data: {
+                    json: toStore
+                }
+            }).done(function(out){
+                console.log("UPDATE WORKED!");
+
+            });
+            //how we confirm if point is banned or not
+            // google.maps.geometry.poly.containsLocation(allMarkers[14].getPosition(), apolygon);
+        });
+    },
+    updateBans: function(marker){
+        $.ajax({
+            type: "POST",
+            contentType:"application/x-www-form-urlencoded",
+            url: "plugin/geoMap/updateBans",
+            beforeSend: function (request) {
+                request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            data: {
+                json: marker
+            }
+        }).done(function(out){
+            console.log("UPDATE BANS WORKED!");
+
         });
     },
     addIPArray: function(ipArray){
@@ -75,12 +142,34 @@ var IPMapper = {
         })
             .done(function (jsonObj) {
                 var json = JSON.stringify(jsonObj);
-                // console.log(json);
-                // IPMapper.placeIPMarker(json['latitude'], json['longitude'], "{\"region_name\":"+ json['region_name'] + "\",city\":" + json['city']+ ",\"zip_code:\""+ json['zip_code']+"}");
                 IPMapper.placeIPMarkerFromJSON(json);
                 // console.log("ADDING CUSTOM!!");
             })
 
+    },
+    placeShapesFromJSON: function(data){
+
+        console.log(data + " is shape data recieved");
+
+        var shapes = $.parseJSON(data);
+        for(var x = 0; x<shapes.length; x++){
+            place(shapes[x]);
+
+        }
+        function place(item) {
+            var shape = new google.maps.Polygon({ //create Map Marker
+                map: IPMapper.map,
+                fillColor: '#F00',
+                fillOpacity: .4,
+                strokeWeight: 2,
+                clickable: true,
+                editable: true,
+                draggable: true,
+                strokeColor: '#800000',
+                path: google.maps.geometry.encoding.decodePath(item["PATH"])
+            });
+            polygons.push(shape);
+        }
     },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
         marker.setPosition(latlng);
@@ -109,24 +198,31 @@ var IPMapper = {
     logError: function(error){
         if (typeof console == 'object') { console.error(error); }
     },
-    getIPJSON: function(ip) {
-        ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
-        if($.trim(ip) != '' && ipRegex.test(ip)) { //validate IP Address format
-            var url = encodeURI(IPMapper.baseUrl + ip + "?callback=?"); //geocoding url
-            $.getJSON(url, function (data) { //get Geocoded JSONP data
-                if ($.trim(data.latitude) != '' && data.latitude != '0' && !isNaN(data.latitude)) { //Geocoding successfull
-                    // if successful, use this json
-                    return $.stringifyJSON(data);
-                } else {
-                    IPMapper.logError('IP Address geocoding failed!');
-                    $.error('IP Address geocoding failed!');
-                }
-            });
-        }
-    },
+    // getIPJSON: function(ip) {
+    //     ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+    //     if($.trim(ip) != '' && ipRegex.test(ip)) { //validate IP Address format
+    //         var url = encodeURI(IPMapper.baseUrl + ip + "?callback=?"); //geocoding url
+    //         $.getJSON(url, function (data) { //get Geocoded JSONP data
+    //             if ($.trim(data.latitude) != '' && data.latitude != '0' && !isNaN(data.latitude)) { //Geocoding successfull
+    //                 // if successful, use this json
+    //                 return $.stringifyJSON(data);
+    //             } else {
+    //                 IPMapper.logError('IP Address geocoding failed!');
+    //                 $.error('IP Address geocoding failed!');
+    //             }
+    //         });
+    //     }
+    // },
+    upadateBans: function(json){
+        //update db with who is banned now
 
+
+
+    },
     placeIPMarkerFromJSON: function(json) {
+        var ct = 0;
         function place(data) {
+            var banned = false;
             var latitude = data.latitude;
             var longitude = data.longitude;
             // var latitude = data.lat;
@@ -142,24 +238,39 @@ var IPMapper = {
                 }
             })
             var latlng = new google.maps.LatLng(latitude, longitude);
+            if(polygons.length > 0){
+                for(var x  = 0; x< polygons.length; x++) {
+                    if (google.maps.geometry.poly.containsLocation(latlng, polygons[x])) {
+                        banned = true;
+                    }
+                }
+
+            }
             var marker = new google.maps.Marker({ //create Map Marker
                 map: IPMapper.map,
                 draggable: false,
                 position: latlng,
-                title: (data["user_name"]||data["ip"]),
+                title: (data["user_name"]||data["IP"]),
+                id: (data["ID"] || data["IP"]),
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
                         scale: 6.5,
-                        fillColor: "#F00",
-                        fillOpacity: 0.4,
-                        strokeWeight: 0.4
+                        fillColor: banned? "#000000" : "#F00",
+                        fillOpacity:  banned? 0.6 : 0.4,
+                        strokeWeight: 0.5
+                        // strokeColor: 'green'
                 }
             })
             // IPMapper.placeIPMarker(marker, latlng, contentString).done(allMarkers.push(marker)); //place Marker on Map
             IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+            ct +=1;
             if(marker){
                 allMarkers.push(marker);
+                if(banned){
+                    allBanned.push(marker);
+                }
             }
+
         }
         var pairs= $.parseJSON(json);
         if (pairs && pairs.constructor === Array) {
@@ -180,13 +291,13 @@ var IPMapper = {
             scale: 6.5,
             fillColor: "#F00",
             fillOpacity: 0.4,
-            strokeWeight: 0.4
+            strokeWeight: 0.5
+            // strokeColor: 'green'
         }
         var icon2 = {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 7.0,
-            fillColor: "#000000",
-            animation: google.maps.Animation.DROP,
+            fillColor: "#ff6600",
             fillOpacity: 0.7,
             strokeWeight: 0.6
         }

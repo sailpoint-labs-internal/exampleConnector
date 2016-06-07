@@ -22,7 +22,8 @@
 <ui:composition>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A&amp;libraries=drawing"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A&amp;libraries=drawing,geometry"></script>
+
 
     <sp:style
             serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
@@ -31,6 +32,9 @@
 
     <!--<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'></link>-->
     <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'></link>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"></link>
+
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
     <div style="height: 8px"></div>
     <div id="titleo" style="display: inline">
 
@@ -38,7 +42,7 @@
                 <input id="ip" name="ip" type="text"/>
                 <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
                 <input id="regName" name="regName" type="text"/>
-                <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>
+                <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Mark User Name</button>
         </div>
 
         <div id="c2">
@@ -61,6 +65,10 @@
             $(document).ready(function(){
                 try{
                     IPMapper.initializeMap("map");
+                        //shapes first to trigger
+                        get_shapes(function (data) {
+                            IPMapper.placeShapesFromJSON(data);
+                        });
                         get_locations(function(data){
                             IPMapper.placeIPMarkerFromJSON(data);
                         });
@@ -83,18 +91,21 @@
     <div style="height: 2px"></div>
     <div id="map" style="height: 750px;"></div>
 
+    <button style="display: inline">Toggle Table</button>
     <div style="padding-left: 20px">
     <!--<h2> other formatting items </h2>-->
-        <table id="myTable" class="table">
+        <table id="myTable" class="table hover">
+        <!--<table id="myTable" class="table">-->
             <thead>
             <tr>
                 <th>User Name</th>
                 <th>Session Id</th>
-                <th>IP Header</th>
+                <th>IP</th>
                 <th>Login Time</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
-                <th>IP</th>
+                <th>IP Header</th>
+                <th>ID</th>
             </tr>
             </thead>
             <tbody>
@@ -103,26 +114,104 @@
     </div>
 
     <script type="text/javascript">
+        //<![CDATA[
+        var selectedShape;
+        function clearSelection()
+        {
+            if(selectedShape)
+            {
+                selectedShape.setEditable(false);
+                selectedShape = null;
+            }
+        }
+
+        function setSelection(shape)
+        {
+            clearSelection();
+            selectedShape = shape;
+            shape.setEditable(true);
+        }
+
+        $("button").click(function() {
+            $("#myTable").toggle();
+        });
+
         getDB(function(data) {
-//                console.log(data + " is the data in geoPage");
+            var table = $('#myTable').DataTable({
+                "bProcessing": true,
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
 
-            var $records = $('#json-records'), myRecords = JSON.parse(data);
+                    $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
+//                    return nRow;
+                    // Bind click event
+                    $(nRow).click(function() {
+                        google.maps.event.trigger(allMarkers[aData["ID"]],'click');
 
-            $.dynatableSetup({
-                table: {
-                    defaultColumnIdStyle: 'underscore'
-                }
-            });
-            $('#myTable').dynatable({
-                dataset: {
-                    records: myRecords
+                    });
+//                        alert( 'You clicked on '+aData +'\'s row' );
+//                        console.log(aData);
+//                        console.log(aData["user_name"]);
+//                        console.dir(aData);
+//                     });
+                    return nRow;
                 },
-                table: {
-                    defaultColumnIdStyle: 'underscore'
-                }
-
+                "aaData": JSON.parse(data),// <-- your array of objects
+                "aoColumns": [
+                    {"mData": "user_name"}, // <-- which values to use inside object
+                    {"mData": "session_id"},
+                    {"mData": "ip"},
+                    {"mData": "login_time"},
+                    {"mData": "latitude"},
+                    {"mData": "longitude"},
+                    {"mData": "ip_header"},
+                    {"mData": "ID"}
+                ]
             });
         });
+
+
+
+//        getDB(function(data) {
+//            var $records = $('#json-records'), myRecords = JSON.parse(data);
+//            $.dynatableSetup({
+//                table: {
+//                    defaultColumnIdStyle: 'underscore'
+//                }
+//            });
+//            $('#myTable').dynatable({
+//                features: {
+//                    pushState: false,
+//                            paginate: true,
+//                            sort: true,
+//                            recordCount: true
+//                },
+//                dataset: {
+//                    records: myRecords,
+//                    sorts: { 'user_name': -1 }
+//                },
+//                table: {
+//                    defaultColumnIdStyle: 'underscore'
+//                }
+//
+//            });
+//            other();
+//        })
+//        function other () {
+//                var ct = 0;
+//                var table = document.getElementById("myTable");
+//                for (var i = 1, row; row = table.rows[i]; i++) {
+//                    //iterate through rows
+//                    for (var j = 0, col; col = row.cells[j]; j++) {
+//                        table.rows[i].cells[0].innerHTML = '<a href="javascript:google.maps.event.trigger(allMarkers['+ct+'],\'click\');">' + table.rows[i].cells[0].innerHTML+'</a>';
+//                        ct += 1;
+//                        //iterate through columns
+//                        //columns would be accessed using the "col" variable assigned in the for loop
+//                    }
+//                }
+//        }
+
+
+//        <a href="javascript:google.maps.event.trigger(allMarkers[0],'click');">Open Info Window</a>
 
         //<![CDATA[
         //TODO: uncomment this!

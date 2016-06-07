@@ -131,6 +131,42 @@ public class GeoMapResource extends AbstractPluginRestResource {
         return Response.ok().build();
     }
 
+
+
+
+    /**
+     * Save map polygons for the current user
+     *
+     * @param json
+     */
+    @POST
+    @Path("processShape")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response processShape(@FormParam("json") String json) throws GeneralException, JSONException {
+        JSONObject test = new JSONObject(json);
+        String type= test.getString("type");
+        String path = test.getString("path");
+
+        try {
+                Identity loggedInUser = getLoggedInUser();
+                String uname = loggedInUser.getDisplayName();
+                System.out.println("Connecting to database...");
+                SailPointContext context = SailPointFactory.getCurrentContext();
+                Connection conn = context.getJdbcConnection();
+                String sql = String.format("insert into map_polygons (MAP_OWNER, TYPE, PATH) values ('%s', '%s', '%s');", uname, type, path);
+
+                try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.executeUpdate(sql);
+                    System.out.println("insert complete! ----- PATH VALID!!");
+            }
+        } catch (Exception e) {
+            log.error(e);
+            System.out.println(e);
+        }
+        return Response.ok().build();
+    }
+
+
     /**
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
      */
@@ -150,6 +186,34 @@ public class GeoMapResource extends AbstractPluginRestResource {
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
                     String ret = rStoJason(rs);
                     return ret;
+            }
+        } catch (Exception e) {
+            System.out.println(e + " ERRORRR");
+            log.error(e);
+        }
+        return null;
+    }
+
+
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
+    @GET
+    @Path("getShapes/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String
+    getShapes() throws GeneralException, SQLException {
+        try {
+            System.out.println("Uploading Shapes to map...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+
+            String sql = "SELECT * FROM map_polygons";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+
+            try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                String ret = rStoJason(rs);
+                return ret;
             }
         } catch (Exception e) {
             System.out.println(e + " ERRORRR");
