@@ -226,6 +226,36 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
 
     /**
+     * Save map polygons for the current user
+     *
+     * @param json
+     */
+    @POST
+    @Path("killShape")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response killShape(@FormParam("json") String json) throws GeneralException, JSONException {
+        json.replaceAll("\\[\\]", "");
+        JSONObject test = new JSONObject(json);
+        String id = test.getString("ID");
+        //losadsads
+
+        try {
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+            String sql = String.format("delete from map_polygons where id=%s;",id);
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate(sql);
+                System.out.println("deletion complete! ----- PATH VALID!!");
+            }
+        } catch (Exception e) {
+            log.error(e);
+            System.out.println(e);
+        }
+        return Response.ok().build();
+    }
+
+
+    /**
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
      */
     @GET
@@ -251,7 +281,32 @@ public class GeoMapResource extends AbstractPluginRestResource {
         }
         return null;
     }
+    /**
+     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
+     */
+    @GET
+    @Path("getLShape/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String
+    getLShape() throws GeneralException, SQLException {
+        try {
+            System.out.println("Uploading Shapes to map...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
 
+            String sql = "select ID from map_polygons order by ID desc limit 1;";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+
+            try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                String ret = rStoJason(rs);
+                return ret;
+            }
+        } catch (Exception e) {
+            System.out.println(e + " ERRORRR");
+            log.error(e);
+        }
+        return null;
+    }
 
     /**
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values

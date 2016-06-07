@@ -2,11 +2,11 @@ select 1;
 
 CREATE  TABLE `geo_table` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(255) NOT NULL ,
-  `session_id` VARCHAR(255) NOT NULL ,
+  `user_name` VARCHAR(255),
+  `session_id` VARCHAR(255),
   `ip_header` VARCHAR(255),
   `identity` VARCHAR(255),
-  `login_time` TIMESTAMP NOT NULL,
+  `login_time` TIMESTAMP,
   `latitude` DOUBLE (16,5),
   `longitude` DOUBLE (16,5),
   `ip` VARCHAR(255),
