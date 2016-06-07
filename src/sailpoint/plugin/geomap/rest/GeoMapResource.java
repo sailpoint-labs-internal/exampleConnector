@@ -1,5 +1,6 @@
 package sailpoint.plugin.geomap.rest;
 
+import org.apache.axis2.databinding.types.soapencoding.Integer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -131,6 +132,63 @@ public class GeoMapResource extends AbstractPluginRestResource {
         return Response.ok().build();
     }
 
+
+
+    /**
+     * Save map polygons for the current user
+     *
+     * @param json
+     */
+    @POST
+    @Path("addBan")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response addBan(@FormParam("json") String json) throws GeneralException, JSONException {
+        JSONObject test = new JSONObject(json);
+        int id = test.getInt("id");
+        try {
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+            String sql = String.format("update geo_table set banned = 1 where id=%s;", id);
+
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate(sql);
+                System.out.println("update complete..banning " + id);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            System.out.println(e);
+        }
+        return Response.ok().build();
+    }
+
+
+
+    /**
+     * Save map polygons for the current user
+     *
+     * @param json
+     */
+    @POST
+    @Path("removeBan")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response removeBan(@FormParam("json") String json) throws GeneralException, JSONException {
+        JSONObject test = new JSONObject(json);
+        int id = test.getInt("id");
+        try {
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+            String sql = String.format("update geo_table set banned = 0 where id=%s;", id);
+
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate(sql);
+                System.out.println("insert complete! ----- PATH VALID!!");
+            }
+        } catch (Exception e) {
+            log.error(e);
+            System.out.println(e);
+        }
+        return Response.ok().build();
+    }
 
 
 

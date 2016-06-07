@@ -106,6 +106,7 @@
                 <th>Longitude</th>
                 <th>IP Header</th>
                 <th>ID</th>
+                <!--<th>Blocked</th>-->
             </tr>
             </thead>
             <tbody>
@@ -114,6 +115,7 @@
     </div>
 
     <script type="text/javascript">
+        var table = null;
         //<![CDATA[
         var selectedShape;
         function clearSelection()
@@ -137,7 +139,7 @@
         });
 
         getDB(function(data) {
-            var table = $('#myTable').DataTable({
+            table = $('#myTable').DataTable({
                 "bProcessing": true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex) {
 
@@ -165,6 +167,7 @@
                     {"mData": "longitude"},
                     {"mData": "ip_header"},
                     {"mData": "ID"}
+//                    {"mData": "banned"}
                 ]
             });
         });

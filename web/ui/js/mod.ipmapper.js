@@ -6,7 +6,7 @@
 var apolygon = null;
 var allMarkers = [];
 var polygons = [];
-var allBanned = [];
+var modified = [];
 
 
 var IPMapper = {
@@ -37,22 +37,12 @@ var IPMapper = {
             drawingControlOptions: {
                 position: google.maps.ControlPosition.TOP_CENTER,
                 drawingModes: [
-                    google.maps.drawing.OverlayType.MARKER,
-                    google.maps.drawing.OverlayType.CIRCLE,
+                    // google.maps.drawing.OverlayType.MARKER,
+                    // google.maps.drawing.OverlayType.CIRCLE,
                     google.maps.drawing.OverlayType.POLYGON,
-                    google.maps.drawing.OverlayType.POLYLINE,
-                    google.maps.drawing.OverlayType.RECTANGLE
+                    // google.maps.drawing.OverlayType.POLYLINE,
+                    // google.maps.drawing.OverlayType.RECTANGLE
                 ]
-            },
-            markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
-            circleOptions: {
-                fillColor: '#99ff66',
-                fillOpacity: .5,
-                strokeWeight: 2,
-                clickable: true,
-                editable: true,
-                zIndex: 1,
-                strokeColor:'green'
             },
             polygonOptions:{
                 fillColor: '#F00',
@@ -60,7 +50,7 @@ var IPMapper = {
                 strokeWeight: 2,
                 clickable: true,
                 editable: true,
-                draggable: true,
+                draggable: false,
                 strokeColor:'#800000'
             },
             rectangleOptions:{
@@ -69,7 +59,7 @@ var IPMapper = {
                 strokeWeight: 2,
                 clickable: true,
                 editable: true,
-                draggable: true,
+                draggable: false,
                 strokeColor:'#800000'
             }
 
@@ -83,11 +73,17 @@ var IPMapper = {
 
         //listen for user to finish drawing polygon
         google.maps.event.addListener(drawingManager,'polygoncomplete',function(polygon) {
+            google.maps.event.addListener(polygon, 'click', function(){IPMapper.destroyShape(polygon)});
+
             for(var x = 0; x < allMarkers.length; x++) {
                 if(google.maps.geometry.poly.containsLocation(allMarkers[x].getPosition(), polygon)){
-                    updateBans(allMarkers[x]);
+                    allMarkers[x].banned = 1;
+                    IPMapper.addBan(allMarkers[x]);
+                    modified.push(allMarkers[x]);
                 }
             }
+            IPMapper.colorCode(modified);
+
             var coords = google.maps.geometry.encoding.encodePath(polygon.getPath());
             var toStore = JSON.stringify({"type": "POLYGON", "path": coords});
             $.ajax({
@@ -108,16 +104,86 @@ var IPMapper = {
             // google.maps.geometry.poly.containsLocation(allMarkers[14].getPosition(), apolygon);
         });
     },
-    updateBans: function(marker){
+    destroyShape: function(polygon){
+        // $.ajax({
+        //     type: "POST",
+        //     contentType:"application/x-www-form-urlencoded",
+        //     url: "plugin/geoMap/destroyShape",
+        //     beforeSend: function (request) {
+        //         request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+        //     },
+        //     data: {
+        //         json: toStore
+        //     }
+        // }).done(function(out){
+        //     console.log("UPDATE WORKED!");
+        //
+        // });
+        if(allMarkers.length > 0){
+            for(var x =0; x< allMarkers.length;x++){
+                if(google.maps.geometry.poly.containsLocation(allMarkers[x].getPosition(), polygon)) {
+                    allMarkers[x].banned = 0;
+                    IPMapper.removeBan(allMarkers[x]);
+                    modified.push(allMarkers[x]);
+                }
+            }
+        }
+        polygon.setMap(null);
+        IPMapper.colorCode(modified);
+    },
+    colorCode: function(list){
+        var icon2 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6.5,
+            fillColor: "#F00",
+            fillOpacity: 0.4,
+            strokeWeight: 0.5
+            // strokeColor: 'green'
+        }
+        var icon1 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6.5,
+            fillColor: "#00",
+            fillOpacity: 0.6,
+            strokeWeight: 0.5
+        }
+        if(list.length > 0){
+            for(var x = 0; x<list.length;x++){
+                if(modified[x].banned == 1)
+                    modified[x].setIcon(icon1);
+                else
+                    modified[x].setIcon(icon2);
+            }
+        }
+    },
+    addBan: function(marker){
+        var toStore = JSON.stringify({"id" : marker.id});
         $.ajax({
             type: "POST",
             contentType:"application/x-www-form-urlencoded",
-            url: "plugin/geoMap/updateBans",
+            url: "plugin/geoMap/addBan",
             beforeSend: function (request) {
                 request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
             },
             data: {
-                json: marker
+                json: toStore
+            }
+        }).done(function(out){
+            console.log("UPDATE BANS WORKED!");
+
+        });
+    },
+    removeBan: function(marker){
+        var toStore = JSON.stringify({"id" : marker.id});
+        $.ajax({
+            type: "POST",
+            contentType:"application/x-www-form-urlencoded",
+            url: "plugin/geoMap/removeBan",
+            beforeSend: function (request) {
+                request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            data: {
+                json: toStore
             }
         }).done(function(out){
             console.log("UPDATE BANS WORKED!");
@@ -148,27 +214,25 @@ var IPMapper = {
 
     },
     placeShapesFromJSON: function(data){
-
-        console.log(data + " is shape data recieved");
-
         var shapes = $.parseJSON(data);
         for(var x = 0; x<shapes.length; x++){
             place(shapes[x]);
-
         }
         function place(item) {
             var shape = new google.maps.Polygon({ //create Map Marker
                 map: IPMapper.map,
                 fillColor: '#F00',
                 fillOpacity: .4,
+                id: item["ID"],
                 strokeWeight: 2,
                 clickable: true,
                 editable: true,
-                draggable: true,
+                draggable: false,
                 strokeColor: '#800000',
                 path: google.maps.geometry.encoding.decodePath(item["PATH"])
             });
             polygons.push(shape);
+            google.maps.event.addListener(shape, 'click', function(){IPMapper.destroyShape(shape)});
         }
     },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
@@ -213,16 +277,8 @@ var IPMapper = {
     //         });
     //     }
     // },
-    upadateBans: function(json){
-        //update db with who is banned now
-
-
-
-    },
     placeIPMarkerFromJSON: function(json) {
-        var ct = 0;
         function place(data) {
-            var banned = false;
             var latitude = data.latitude;
             var longitude = data.longitude;
             // var latitude = data.lat;
@@ -238,37 +294,34 @@ var IPMapper = {
                 }
             })
             var latlng = new google.maps.LatLng(latitude, longitude);
-            if(polygons.length > 0){
-                for(var x  = 0; x< polygons.length; x++) {
-                    if (google.maps.geometry.poly.containsLocation(latlng, polygons[x])) {
-                        banned = true;
-                    }
-                }
-
-            }
+            // if(polygons.length > 0){
+            //     for(var x  = 0; x< polygons.length; x++) {
+            //         if (google.maps.geometry.poly.containsLocation(latlng, polygons[x])) {
+            //             banned = true;
+            //         }
+            //     }
+            //
+            // }
+            var ibanned = data["banned"];
             var marker = new google.maps.Marker({ //create Map Marker
                 map: IPMapper.map,
                 draggable: false,
                 position: latlng,
+                banned: ibanned,
                 title: (data["user_name"]||data["IP"]),
                 id: (data["ID"] || data["IP"]),
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
                         scale: 6.5,
-                        fillColor: banned? "#000000" : "#F00",
-                        fillOpacity:  banned? 0.6 : 0.4,
+                        fillColor: (ibanned ==1) ? "#00" : "#F00",
+                        fillOpacity: (ibanned ==1) ? 0.6 : 0.4,
                         strokeWeight: 0.5
                         // strokeColor: 'green'
                 }
             })
-            // IPMapper.placeIPMarker(marker, latlng, contentString).done(allMarkers.push(marker)); //place Marker on Map
             IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
-            ct +=1;
             if(marker){
                 allMarkers.push(marker);
-                if(banned){
-                    allBanned.push(marker);
-                }
             }
 
         }
