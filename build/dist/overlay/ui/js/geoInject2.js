@@ -33,11 +33,13 @@ function getDBhome(callback) {
         url: "plugin/geoMap/getLastLogin"
     }).done(function (msg) {
         var x = JSON.parse(msg);
+        console.log(x + " is db homne");
         callback(x);
     });
 };
 
 getDBhome(function insertLogin(data){
+    console.log(data + " is data");
     if(data) {
         data = data[0];
         // $("div[class='row m-b-sm m-t-sm home-header sp-page-header ng-scope']").prepend('<div style="float: left"><h1>Last Login</h1></div><br>');

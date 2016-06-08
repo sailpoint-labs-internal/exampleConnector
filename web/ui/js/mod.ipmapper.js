@@ -76,7 +76,6 @@ var IPMapper = {
             google.maps.event.addListener(polygon, 'click', function(){IPMapper.destroyShape(polygon)});
 
             for(var key in allMarkers ){
-            // for(var x = 0; x < Object.keys(allMarkers).length; x++) {
                 if(google.maps.geometry.poly.containsLocation(allMarkers[key].getPosition(), polygon)){
                     allMarkers[key].banned = 1;
                     IPMapper.addBan(allMarkers[key]);
@@ -170,6 +169,7 @@ var IPMapper = {
             }
     },
     addBan: function(marker){
+        //TODO: put polygon id in here as well!!!
         var toStore = JSON.stringify({"id" : marker.id});
         $.ajax({
             type: "POST",

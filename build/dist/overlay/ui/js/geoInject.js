@@ -4,7 +4,6 @@ $(document).ready(function () {
         crossDomain: true,
         dataType : 'jsonp',
         url: "http://freegeoip.net/json/"
-        // url: "plugin/geoMap/processLoginUsingHeaders"
     })
         .done(function (jsonObj) {
             var json = JSON.stringify(jsonObj);

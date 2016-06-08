@@ -84,7 +84,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
      * @param json
      */
     @POST
-    @Path("processLogin")
+    @Path("processLogin") // throw exception when banned ip hit, coordinate based
     @Consumes("application/x-www-form-urlencoded")
     public Response processLogin(@FormParam("json") String json) throws GeneralException, JSONException {
         String session_id = getRequest().getSession().getId();
@@ -117,8 +117,10 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
 
+//                String sql = "";
+
                 String uname = loggedInUser.getDisplayName();
-                String sql = String.format("insert into geo_table (user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", uname, session_id, ip_address, identity_id, latitude, longitude, ip_online,  country_code, country_name, region_code, region_name, city, zip_code, time_zone);
+                String sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online,  country_code, country_name, region_code, region_name, city, zip_code, time_zone);
 
                 try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.executeUpdate(sql);
@@ -144,11 +146,11 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Consumes("application/x-www-form-urlencoded")
     public Response addBan(@FormParam("json") String json) throws GeneralException, JSONException {
         JSONObject test = new JSONObject(json);
-        int id = test.getInt("id");
+        String id = test.getString("id");
         try {
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
-            String sql = String.format("update geo_table set banned = 1 where id=%s;", id);
+            String sql = String.format("update geo_table set banned = 1 where id='%s';", id);
 
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate(sql);
@@ -173,11 +175,11 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Consumes("application/x-www-form-urlencoded")
     public Response removeBan(@FormParam("json") String json) throws GeneralException, JSONException {
         JSONObject test = new JSONObject(json);
-        int id = test.getInt("id");
+        String id = test.getString("id");
         try {
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
-            String sql = String.format("update geo_table set banned = 0 where id=%s;", id);
+            String sql = String.format("update geo_table set banned = 0 where id='%s';", id);
 
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate(sql);
@@ -415,7 +417,8 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 Connection conn = context.getJdbcConnection();
                 String uname = loggedInUser.getDisplayName();
 
-                String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1 offset 1;";
+                String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1;";
+//                String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1 offset 1;";
 
                 java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
                 try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {

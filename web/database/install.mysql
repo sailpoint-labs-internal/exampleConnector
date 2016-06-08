@@ -27,7 +27,3 @@ CREATE TABLE `map_polygons` (
   `PATH` TEXT NOT NULL,
 	PRIMARY KEY (`ID`, `MAP_OWNER`));
 
-
-
-
-
