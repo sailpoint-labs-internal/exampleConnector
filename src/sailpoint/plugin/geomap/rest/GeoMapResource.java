@@ -1,8 +1,13 @@
 package sailpoint.plugin.geomap.rest;
 
+import com.sromku.polygon.*;
+import com.sromku.polygon.Point;
+import com.sromku.polygon.Polygon;
+import flexjson.JSON;
 import org.apache.axis2.databinding.types.soapencoding.Integer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sailpoint.api.SailPointContext;
@@ -20,12 +25,16 @@ import sailpoint.web.plugin.config.Plugin;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
+
+import com.sromku.polygon.Polygon;
+
+
+
 
 //import sailpoint.plugin.rest.jaxrs.AllowAll;
 
@@ -74,6 +83,8 @@ public class GeoMapResource extends AbstractPluginRestResource {
             }
             message += " (" + _testCounter + ")"; //creates the geoMap(x) values
         }
+
+
         geoMapDTO.set_message(message);
         return geoMapDTO;
     }
@@ -112,20 +123,49 @@ public class GeoMapResource extends AbstractPluginRestResource {
             Identity loggedInUser = getLoggedInUser();
             String identity_id = loggedInUser.getId();
 
+//            boolean banned = false;
             if (loggedInUser != null) {
                 System.out.println("Connecting to database...");
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
+                Polygon.Builder poly = new Polygon.Builder();
 
-//                String sql = "";
+                try{
+                String sql = "select ID, PATH from map_polygons;";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                    while (rs.next()) {
+                        JSONArray path = new JSONArray(rs.getString("PATH"));
+                        for(int x = 0; x<path.length(); x++){
+                            JSONObject point = (JSONObject) path.get(x);
+                            double lat = point.getDouble("lat");
+                            double lng = point.getDouble("lng");
+                            Point p = new Point((float) lat, (float) lng);
+                            poly.addVertex(p);
+                        }
+                        poly.build();
+                        Polygon g = new Polygon(poly._sides, poly._boundingBox);
 
-                String uname = loggedInUser.getDisplayName();
-                String sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online,  country_code, country_name, region_code, region_name, city, zip_code, time_zone);
+                        if(g.contains(new Point((float)latitude, (float)longitude))){
+                            System.out.println("BANNEDDD ");
+//                            throw new Exception ("BAD USER");
+//                            loggedInUser.getLastLogin()
+//                            return Response.temporaryRedirect(URI.create("http://localhost:8080/identityiq/login.jsf")).build();
+                        }
+                    }
+                }
+                    System.out.println("valid user...");
 
-                try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    String uname = loggedInUser.getDisplayName();
+                    sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online, country_code, country_name, region_code, region_name, city, zip_code, time_zone);
+                    stmt = conn.prepareStatement(sql);
                     stmt.executeUpdate(sql);
                     System.out.println("insert complete! ----- ALL VALID!!");
                 }
+                catch (Exception e) {
+                    log.error(e);
+                }
+
             }
         } catch (Exception e) {
             log.error(e);
@@ -205,7 +245,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
     public Response processShape(@FormParam("json") String json) throws GeneralException, JSONException {
         JSONObject test = new JSONObject(json);
         String type= test.getString("type");
-        String path = test.getString("path");
+        JSONArray path = test.getJSONArray("path");
 
         try {
                 Identity loggedInUser = getLoggedInUser();
@@ -213,7 +253,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 System.out.println("Connecting to database...");
                 SailPointContext context = SailPointFactory.getCurrentContext();
                 Connection conn = context.getJdbcConnection();
-                String sql = String.format("insert into map_polygons (MAP_OWNER, TYPE, PATH) values ('%s', '%s', '%s');", uname, type, path);
+                String sql = String.format("insert into map_polygons (MAP_OWNER, TYPE, PATH) values ('%s', '%s', '%s');", uname, type, path.toString());
 
                 try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.executeUpdate(sql);
@@ -417,6 +457,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 Connection conn = context.getJdbcConnection();
                 String uname = loggedInUser.getDisplayName();
 
+                //NOTE: could use loggedInUser.getLastLogIn() but still need sql call to get location etc.
                 String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1;";
 //                String sql = "SELECT * FROM geo_table where user_name=\""+ uname +"\" order by login_time desc Limit 1 offset 1;";
 

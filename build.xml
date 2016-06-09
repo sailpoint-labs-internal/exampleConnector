@@ -43,6 +43,7 @@
       <fileset dir="build/classes">
         <include name="sailpoint/plugin/**"/>
         <include name="sailpoint/web/**"/>
+        <include name="com/sromku/polygon/**"/>
       </fileset>
     </jar>
     <copy todir="${overlay}">

@@ -9,6 +9,8 @@ var polygons = {};
 var modified = {};
 
 
+var glob;
+
 var IPMapper = {
     map: null,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -84,7 +86,7 @@ var IPMapper = {
             }
             IPMapper.colorCode(modified);
 
-            var coords = google.maps.geometry.encoding.encodePath(polygon.getPath());
+            var coords = polygon.getPath().getArray();
             var toStore = JSON.stringify({"type": "POLYGON", "path": coords});
             $.ajax({
                 type: "POST",
@@ -117,7 +119,6 @@ var IPMapper = {
         })
             .done(function (jsonObj) {
                 // var json = JSON.stringify(jsonObj);
-
                 var json = JSON.stringify(JSON.parse(jsonObj)[0]);
                 $.ajax({
                     type: "POST",
@@ -236,6 +237,7 @@ var IPMapper = {
             place(shapes[x])
         }
         function place(item) {
+            glob = item;
             var shape = new google.maps.Polygon({ //create Map Marker
                 map: IPMapper.map,
                 fillColor: '#F00',
@@ -246,10 +248,12 @@ var IPMapper = {
                 editable: true,
                 draggable: false,
                 strokeColor: '#800000',
-                path: google.maps.geometry.encoding.decodePath(item["PATH"])
+                path: eval(item["PATH"])
             });
             polygons[item["ID"]] = shape;
             google.maps.event.addListener(shape, 'click', function(){IPMapper.destroyShape(shape)});
+
+            
         }
     },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
