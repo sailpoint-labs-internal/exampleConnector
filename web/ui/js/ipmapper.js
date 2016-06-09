@@ -18,7 +18,7 @@ var IPMapper = {
 			center: latlng,
 			styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}],
 			mapTypeId: IPMapper.mapTypeId
-		}
+		};
 		//init Map
 		IPMapper.map = new google.maps.Map(document.getElementById(mapId), mapOptions);
 		//init info window
@@ -75,7 +75,7 @@ var IPMapper = {
 		IPMapper.map.fitBounds(IPMapper.latlngbound);
 	},
 	getIPInfoWindowEvent: function (marker, contentString) { //open Marker Info Window
-		IPMapper.infowindow.close()
+		IPMapper.infowindow.close();
 		IPMapper.infowindow.setContent(contentString);
 		IPMapper.infowindow.open(IPMapper.map, marker);
 	},
@@ -94,4 +94,4 @@ var IPMapper = {
 			console.error(error);
 		}
 	}
-}
+};

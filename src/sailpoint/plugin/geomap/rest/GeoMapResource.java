@@ -130,41 +130,46 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 Connection conn = context.getJdbcConnection();
                 Polygon.Builder poly = new Polygon.Builder();
 
-                try{
                 String sql = "select ID, PATH from map_polygons;";
                 java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-                try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                    while (rs.next()) {
-                        JSONArray path = new JSONArray(rs.getString("PATH"));
-                        for(int x = 0; x<path.length(); x++){
-                            JSONObject point = (JSONObject) path.get(x);
-                            double lat = point.getDouble("lat");
-                            double lng = point.getDouble("lng");
-                            Point p = new Point((float) lat, (float) lng);
-                            poly.addVertex(p);
-                        }
-                        poly.build();
-                        Polygon g = new Polygon(poly._sides, poly._boundingBox);
+                    try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                        while (rs.next()) {
+                            JSONArray path = new JSONArray(rs.getString("PATH"));
+                            for(int x = 0; x<path.length(); x++){
+                                JSONObject point = (JSONObject) path.get(x);
+                                double lat = point.getDouble("lat");
+                                double lng = point.getDouble("lng");
+                                Point p = new Point((float) lat, (float) lng);
+                                poly.addVertex(p);
+                            }
+                            poly.build();
+                            Polygon g = new Polygon(poly._sides, poly._boundingBox);
 
-                        if(g.contains(new Point((float)latitude, (float)longitude))){
-                            System.out.println("BANNEDDD ");
-                            return Response.ok().entity(1).build();
+                            if(g.contains(new Point((float)latitude, (float)longitude))){
+                                System.out.println("BANNEDDD ");
+                                return Response.ok().entity(1).build(); //seems unsafe?
+                            }
                         }
                     }
-                }
-                    System.out.println("valid user...");
+                    sql = "select identity, ip from geo_table where banned =1;";
+                    stmt = conn.prepareStatement(sql);
+                    try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+                            while (rs.next()) {
+                                if(rs.getString("identity").equals(identity_id) && rs.getString("ip").equals(ip_online)){
+                                    System.out.println("BANNEDDD ");
+                                    return Response.ok().entity(1).build(); //seems unsafe?
+                                }
 
+                            }
+                        }
+
+                    System.out.println("valid user...");
                     String uname = loggedInUser.getDisplayName();
                     sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online, country_code, country_name, region_code, region_name, city, zip_code, time_zone);
                     stmt = conn.prepareStatement(sql);
                     stmt.executeUpdate(sql);
                     System.out.println("insert complete! ----- ALL VALID!!");
                 }
-                catch (Exception e) {
-                    log.error(e);
-                }
-
-            }
         } catch (Exception e) {
             log.error(e);
             System.out.println(e);

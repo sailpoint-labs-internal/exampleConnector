@@ -26,7 +26,7 @@ var IPMapper = {
             center: latlng,
             styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#2BA4C7"},{"visibility":"on"}]}],
             mapTypeId: IPMapper.mapTypeId
-        }
+        };
         //init Map
         IPMapper.map = new google.maps.Map(document.getElementById(mapId), mapOptions);
         //init info window
@@ -148,6 +148,30 @@ var IPMapper = {
         IPMapper.colorCode(modified);
         }
     },
+    colorOne: function(marker_id){
+        var icon2 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6.5,
+            fillColor: "#F00",
+            fillOpacity: 0.4,
+            strokeWeight: 0.5
+            // strokeColor: 'green'
+        };
+        var icon1 = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6.5,
+            fillColor: "#00",
+            fillOpacity: 0.6,
+            strokeWeight: 0.5
+        };
+        var marker = allMarkers[marker_id];
+        if(marker.banned == 1){
+            marker.setIcon(icon1);
+        }
+        else{
+            marker.setIcon(icon2);
+        }
+    },
     colorCode: function(list){
         var icon2 = {
             path: google.maps.SymbolPath.CIRCLE,
@@ -156,14 +180,14 @@ var IPMapper = {
             fillOpacity: 0.4,
             strokeWeight: 0.5
             // strokeColor: 'green'
-        }
+        };
         var icon1 = {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 6.5,
             fillColor: "#00",
             fillOpacity: 0.6,
             strokeWeight: 0.5
-        }
+        };
         // if(list.length > 0){
             // for(var x = 0; x<list.length;x++){
         for(var key in list){
@@ -241,7 +265,6 @@ var IPMapper = {
             place(shapes[x])
         }
         function place(item) {
-            glob = item;
             var shape = new google.maps.Polygon({ //create Map Marker
                 map: IPMapper.map,
                 fillColor: '#F00',
@@ -259,9 +282,26 @@ var IPMapper = {
                 IPMapper.destroyShape(shape)});
         }
     },
+    oneRem: function(id){
+        IPMapper.removeBan(allMarkers[id]);
+        allMarkers[id].banned=0;
+        IPMapper.colorOne(id);
+    },
+    oneBan: function(id){
+        IPMapper.addBan(allMarkers[id]);
+        allMarkers[id].banned=1;
+        IPMapper.colorOne(id);
+    },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
+
         marker.setPosition(latlng);
         google.maps.event.addListener(marker, 'click', function() {
+            // if(marker.banned == 1) {
+            //     contentString += '<button onclick="IPMapper.oneRem(\''+marker.id+'\');">' + 'Un-Ban User' + '</button>';
+            // }
+            // else {
+            //     contentString += '<button onclick="IPMapper.oneBan(\''+marker.id+'\');">' + 'Ban User' + '</button>';
+            // }
             IPMapper.getIPInfoWindowEvent(marker, contentString);
             IPMapper.map.panTo(marker.getPosition());
         });
@@ -270,7 +310,7 @@ var IPMapper = {
         IPMapper.map.fitBounds(IPMapper.latlngbound);
     },
     getIPInfoWindowEvent: function(marker, contentString){ //open Marker Info Window
-        IPMapper.infowindow.close()
+        IPMapper.infowindow.close();
         IPMapper.infowindow.setContent(contentString);
         IPMapper.infowindow.open(IPMapper.map, marker);
     },
@@ -302,7 +342,7 @@ var IPMapper = {
                 else {
                     contentString += '<b>' + key.toUpperCase().replace("_", " ") + ':</b> ' + val + '<br />';
                 }
-            })
+            });
             var latlng = new google.maps.LatLng(latitude, longitude);
             // if(polygons.length > 0){
             //     for(var x  = 0; x< polygons.length; x++) {
@@ -328,11 +368,10 @@ var IPMapper = {
                         strokeWeight: 0.5
                         // strokeColor: 'green'
                 }
-            })
-            IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
+            });
             if(marker){
                 allMarkers[data["ID"]] = marker;
-                // allMarkers.push(marker);
+                IPMapper.placeIPMarker(marker, latlng, contentString); //place Marker on Map
             }
 
         }
@@ -357,14 +396,14 @@ var IPMapper = {
             fillOpacity: 0.4,
             strokeWeight: 0.5
             // strokeColor: 'green'
-        }
+        };
         var icon2 = {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 8.5,
             fillColor: "#66ff33",
             fillOpacity: 0.9,
             strokeWeight: 1
-        }
+        };
 
         if(name == ''){
             // for(var x =0; x<allMarkers.length; x++){
@@ -386,4 +425,4 @@ var IPMapper = {
             }
         }
     }
-}
+};

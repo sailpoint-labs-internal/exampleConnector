@@ -36,8 +36,7 @@ function getDBhome(callback) {
         console.log(x + " is db homne");
         callback(x);
     });
-};
-
+}
 getDBhome(function insertLogin(data){
     console.log(data + " is data");
     if(data) {

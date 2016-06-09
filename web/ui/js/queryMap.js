@@ -12,8 +12,7 @@ function get_locations(callback) {
         .done(function (msg) {
             callback(msg);
         });
-};
-
+}
 function get_shapes(callback) {
     $.ajax({
         method: "GET",
@@ -25,9 +24,7 @@ function get_shapes(callback) {
         .done(function (msg) {
             callback(msg);
         });
-};
-
-
+}
 function getDB(callback) {
     $.ajax({
         method: "GET",
@@ -40,5 +37,5 @@ function getDB(callback) {
         // var x = JSON.parse(msg);
         callback(msg);
     });
-};
+}
 

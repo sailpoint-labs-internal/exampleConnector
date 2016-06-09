@@ -244,12 +244,8 @@ public class Polygon
 		// System.out.println("Ray: " + ray.toString() + " ,Side: " + side);
 		// System.out.println("Intersect point: " + intersectPoint.toString());
 
-		if (side.isInside(intersectPoint) && ray.isInside(intersectPoint))
-		{
-			return true;
-		}
+		return side.isInside(intersectPoint) && ray.isInside(intersectPoint);
 
-		return false;
 	}
 
 	/**
@@ -277,11 +273,7 @@ public class Polygon
 	 */
 	private boolean inBoundingBox(Point point)
 	{
-		if (point.x < _boundingBox.xMin || point.x > _boundingBox.xMax || point.y < _boundingBox.yMin || point.y > _boundingBox.yMax)
-		{
-			return false;
-		}
-		return true;
+		return !(point.x < _boundingBox.xMin || point.x > _boundingBox.xMax || point.y < _boundingBox.yMin || point.y > _boundingBox.yMax);
 	}
 
 	private static class BoundingBox
