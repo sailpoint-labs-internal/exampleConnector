@@ -18,6 +18,13 @@ $(document).ready(function () {
                 },
                 data: {
                     json: json
+                },
+                success: function(data){
+                    if(data == 1){
+                        // $(location).attr('href', 'http://i26.servimg.com/u/f26/11/96/43/31/banned13.jpg');
+                        //     window.location.href = "ban.xhtml";
+                        // doLogout();
+                    }
                 }
             }).done(function(out){
                 // console.log(out);

@@ -148,9 +148,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
                         if(g.contains(new Point((float)latitude, (float)longitude))){
                             System.out.println("BANNEDDD ");
-//                            throw new Exception ("BAD USER");
-//                            loggedInUser.getLastLogin()
-//                            return Response.temporaryRedirect(URI.create("http://localhost:8080/identityiq/login.jsf")).build();
+                            return Response.ok().entity(1).build();
                         }
                     }
                 }
@@ -171,7 +169,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
             log.error(e);
             System.out.println(e);
         }
-        return Response.ok().build();
+        return Response.ok().entity(0).build();
     }
 
 
