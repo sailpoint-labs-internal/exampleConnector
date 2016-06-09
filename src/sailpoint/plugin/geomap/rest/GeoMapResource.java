@@ -287,6 +287,12 @@ public class GeoMapResource extends AbstractPluginRestResource {
                 stmt.executeUpdate(sql);
                 System.out.println("deletion complete! ----- PATH VALID!!");
             }
+//            ALTER TABLE map_polygons AUTO_INCREMENT = 30;
+            sql = "ALTER TABLE map_polygons AUTO_INCREMENT = 1;";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate(sql);
+                System.out.println("deletion complete! ----- PATH VALID!!");
+            }
         } catch (Exception e) {
             log.error(e);
             System.out.println(e);

@@ -110,13 +110,15 @@ var IPMapper = {
         });
     },
     destroyShape: function(polygon){
+        var decision = confirm("Destroy Ban Region?");
+        if (decision) {
         $.ajax({
             method: "GET",
             beforeSend: function (request) {
                 request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
             },
             url: "plugin/geoMap/getLShape/"
-        })
+            })
             .done(function (jsonObj) {
                 // var json = JSON.stringify(jsonObj);
                 var json = JSON.stringify(JSON.parse(jsonObj)[0]);
@@ -141,8 +143,10 @@ var IPMapper = {
                     modified[key] = allMarkers[key];
                 }
             }
+
         polygon.setMap(null);
         IPMapper.colorCode(modified);
+        }
     },
     colorCode: function(list){
         var icon2 = {
@@ -251,9 +255,8 @@ var IPMapper = {
                 path: eval(item["PATH"])
             });
             polygons[item["ID"]] = shape;
-            google.maps.event.addListener(shape, 'click', function(){IPMapper.destroyShape(shape)});
-
-            
+            google.maps.event.addListener(shape, 'click', function(){
+                IPMapper.destroyShape(shape)});
         }
     },
     placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
