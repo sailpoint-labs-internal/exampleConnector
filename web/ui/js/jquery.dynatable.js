@@ -351,9 +351,8 @@
 
       // loop through records
       for (var i = 0, len = settings.dataset.records.length; i < len; i++) {
-        var record = settings.dataset.records[i],
-            tr = rowWriter(i, record, columns, cellWriter);
-        rows += tr;
+        var record = settings.dataset.records[i];
+        rows += rowWriter(i, record, columns, cellWriter);
       }
 
       // Appended dynatable interactive elements
@@ -733,14 +732,12 @@
     };
 
     this.create = function() {
-      var $processing = $('<div></div>', {
-            html: '<span>' + settings.inputs.processingText + '</span>',
-            id: 'dynatable-processing-' + obj.element.id,
-            'class': 'dynatable-processing',
-            style: 'position: absolute; display: none;'
-          });
-
-      return $processing;
+      return $('<div></div>', {
+        html: '<span>' + settings.inputs.processingText + '</span>',
+        id: 'dynatable-processing-' + obj.element.id,
+        'class': 'dynatable-processing',
+        style: 'position: absolute; display: none;'
+      });
     };
 
     this.position = function() {
@@ -895,9 +892,8 @@
             'boolean': 'number',
             object: 'number' // dates and null values are also objects, this works...
           },
-          attrType = a[attr] ? typeof(a[attr]) : typeof(b[attr]),
-          type = types[attrType] || 'number';
-      return type;
+          attrType = a[attr] ? typeof(a[attr]) : typeof(b[attr]);
+      return types[attrType] || 'number';
     };
 
     // Built-in sort functions

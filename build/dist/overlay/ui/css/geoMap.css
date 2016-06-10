@@ -92,3 +92,54 @@ div#titleo{
     font-size: 13px;
 }
 
+span.bigcheck-target {
+    font-family: FontAwesome; /* use an icon font for the checkbox */
+}
+input[type='checkbox'].bigcheck {
+    position: relative;
+    left: -999em; /* hide the real checkbox */
+}
+
+input[type='checkbox'].bigcheck + span.bigcheck-target:after {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 20px; /* set this to whatever size you want */
+    color: #2BA4C7;
+    position: relative;
+    float: right;
+    content: 'Un-Banned';
+}
+input[type='checkbox'].bigcheck:checked + span.bigcheck-target:after {
+    font-family: sans-serif;
+    font-size: 20px; /* set this to whatever size you want */
+    font-weight: bold;
+    color: red;
+    position: relative;
+    float: right;
+    content: 'Banned';
+}
+input[type='checkbox'].bigcheck + span.bigcheck-target:before {
+    float: left;
+    color: #2BA4C7;
+    content: "\f096"; /* In fontawesome, is an open square (fa-square-o) */
+}
+input[type='checkbox'].bigcheck:checked + span.bigcheck-target:before {
+    float: left;
+    color: red;
+    content: "\f046"; /* fontawesome checked box (fa-check-square-o) */
+}
+
+/* ==== optional - colors and padding to make it look nice === */
+/*check.body {*/
+/*}*/
+div#fancy{
+    padding-top: 5px;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 20px; /* set this to whatever size you want */
+
+}
+span.bigcheck {
+    display: block;
+    /*padding: 0.5em;;*/
+}

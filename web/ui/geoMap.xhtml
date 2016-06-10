@@ -61,32 +61,6 @@
         <src>jquery.dynatable.js</src>
         </sp:script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
-                try{
-                    IPMapper.initializeMap("map");
-                        //shapes first to trigger
-                        get_shapes(function (data) {
-                            IPMapper.placeShapesFromJSON(data);
-                        });
-                        get_locations(function(data){
-                            IPMapper.placeIPMarkerFromJSON(data);
-                        });
-                }catch(e){
-                    console.log(e);
-                }
-            });
-        </script>
-
-    <!--<div style="padding-left: 5px">-->
-    <!--&lt;!&ndash;<div style="float: left">&ndash;&gt;-->
-    <!--<input id="ip" name="ip" type="text"/>-->
-    <!--<button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>-->
-
-    <!--<input id="regName" name="regName" type="text"/>-->
-    <!--<button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Regex Filter name</button>-->
-    <!--</div>-->
-
 
     <div style="height: 2px"></div>
     <div id="map" style="height: 750px;"></div>
@@ -114,9 +88,49 @@
         </table>
     </div>
 
+
     <script type="text/javascript">
-        var table = null;
         //<![CDATA[
+        $(document).ready(function(){
+            try{
+                IPMapper.initializeMap("map");
+                //shapes first to trigger
+                get_shapes(function (data) {
+                    IPMapper.placeShapesFromJSON(data);
+                });
+                getDB(function(data){
+                    IPMapper.placeIPMarkerFromJSON(data);
+                    table = $('#myTable').DataTable({
+                        "bProcessing": true,
+                        "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+
+                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
+                            // Bind click event
+                            $(nRow).click(function() {
+                                google.maps.event.trigger(allMarkers[aData["ID"]],'click');
+
+                            });
+                            return nRow;
+                        },
+                        "aaData": JSON.parse(data),
+                        "aoColumns": [
+                            {"mData": "user_name"},
+                            {"mData": "session_id"},
+                            {"mData": "ip"},
+                            {"mData": "login_time"},
+                            {"mData": "latitude"},
+                            {"mData": "longitude"},
+                            {"mData": "ip_header"},
+                            {"mData": "ID"}
+                        ]
+                    });
+                });
+            }catch(e){
+                console.log(e);
+            }
+        });
+        //]]>
+        var table = null;
         var selectedShape;
         function clearSelection()
         {
@@ -138,129 +152,24 @@
             $("#myTable").toggle();
         });
 
-        getDB(function(data) {
-            table = $('#myTable').DataTable({
-                "bProcessing": true,
-                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
-
-                    $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
-//                    return nRow;
-                    // Bind click event
-                    $(nRow).click(function() {
-                        google.maps.event.trigger(allMarkers[aData["ID"]],'click');
-
-                    });
-//                        alert( 'You clicked on '+aData +'\'s row' );
-//                        console.log(aData);
-//                        console.log(aData["user_name"]);
-//                        console.dir(aData);
-//                     });
-                    return nRow;
-                },
-                "aaData": JSON.parse(data),// <-- your array of objects
-                "aoColumns": [
-                    {"mData": "user_name"}, // <-- which values to use inside object
-                    {"mData": "session_id"},
-                    {"mData": "ip"},
-                    {"mData": "login_time"},
-                    {"mData": "latitude"},
-                    {"mData": "longitude"},
-                    {"mData": "ip_header"},
-                    {"mData": "ID"}
-//                    {"mData": "banned"}
-                ]
-            });
-        });
-
-
-
-//        getDB(function(data) {
-//            var $records = $('#json-records'), myRecords = JSON.parse(data);
-//            $.dynatableSetup({
-//                table: {
-//                    defaultColumnIdStyle: 'underscore'
-//                }
-//            });
-//            $('#myTable').dynatable({
-//                features: {
-//                    pushState: false,
-//                            paginate: true,
-//                            sort: true,
-//                            recordCount: true
-//                },
-//                dataset: {
-//                    records: myRecords,
-//                    sorts: { 'user_name': -1 }
-//                },
-//                table: {
-//                    defaultColumnIdStyle: 'underscore'
-//                }
-//
-//            });
-//            other();
-//        })
-//        function other () {
-//                var ct = 0;
-//                var table = document.getElementById("myTable");
-//                for (var i = 1, row; row = table.rows[i]; i++) {
-//                    //iterate through rows
-//                    for (var j = 0, col; col = row.cells[j]; j++) {
-//                        table.rows[i].cells[0].innerHTML = '<a href="javascript:google.maps.event.trigger(allMarkers['+ct+'],\'click\');">' + table.rows[i].cells[0].innerHTML+'</a>';
-//                        ct += 1;
-//                        //iterate through columns
-//                        //columns would be accessed using the "col" variable assigned in the for loop
-//                    }
-//                }
-//        }
-
-
-//        <a href="javascript:google.maps.event.trigger(allMarkers[0],'click');">Open Info Window</a>
-
-        //<![CDATA[
-        //TODO: uncomment this!
-
-//        $(document).ready(function(){
-//            console.log("starting getDB.......");
-//
-//            getDB(function(data){
-//                console.log("data");
-//                console.log(data);
-//                console.log(data[0]);
-//                for(var x = 0; x < data . length; x++){
-//                    console.log(data[x]['uname']);
-//                }
-//            });
-//        });
-//
-//        function addElement (content) {
-//            // create a new div element
-//            // and give it some content
-//            var newDiv = document.createElement("div");
-//            var newContent = document.createTextNode(content);
-//            newDiv.appendChild(newContent); //add the text node to the newly created div.
-//
-//            // add the newly created element and its content into the DOM
-//            var currentDiv = document.getElementById("div1");
-//            document.body.insertBefore(newDiv, currentDiv);
-//            console.log("done???");
-//        }
-        //]]>
     </script>
 
+<!--<script type="text/javascript">-->
+<!--function update_value(chk_bx){-->
+    <!--if(chk_bx.checked)-->
+    <!--{-->
+        <!--var a="checked";}-->
+    <!--else{-->
+        <!--var a="not checked";-->
+    <!--}-->
+    <!--document.getElementById('result').innerHTML ='result '+a;-->
 
-    <!--</script>-->
-    <!--<sp:script enabled="false"-->
-               <!--serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">-->
+<!--}-->
 
-     <!--<src>ipmapper.js</src>-->
-    <!-- this works as well ^^^  -->
-    <!--</sp:script>-->
-    <!-- </sp:script> -->
+<!--</script>-->
+<!--<input type="checkbox" value="1" onchange="update_value(this);"/>Checkbox<br/>-->
 
-
+    <h2> result is <span id="result"></span></h2>
 </ui:composition>
-
-
 </body>
 </html>
-

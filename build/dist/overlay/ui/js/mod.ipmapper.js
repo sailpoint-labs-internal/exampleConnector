@@ -3,13 +3,10 @@
  * http://lab.abhinayrathore.com/ipmapper/
  * Last Updated: June 13, 2012
  */
-var apolygon = null;
 var allMarkers = {};
 var polygons = {};
 var modified = {};
 
-
-var glob;
 
 var IPMapper = {
     map: null,
@@ -64,7 +61,6 @@ var IPMapper = {
                 draggable: false,
                 strokeColor:'#800000'
             }
-
         });
         drawingManager.setMap(this.map);
         //info window close event
@@ -80,6 +76,8 @@ var IPMapper = {
             for(var key in allMarkers ){
                 if(google.maps.geometry.poly.containsLocation(allMarkers[key].getPosition(), polygon)){
                     allMarkers[key].banned = 1;
+                    console.log(polygons.last);
+                    // allMarkers[key].region +=
                     IPMapper.addBan(allMarkers[key]);
                     modified[key] = allMarkers[key];
                 }
@@ -257,10 +255,6 @@ var IPMapper = {
     },
     placeShapesFromJSON: function(data){
         var shapes = $.parseJSON(data);
-
-        // for(var x = 0; x<shapes.length; x++){
-        //     place(shapes[x]);
-        // }
         for(var x in shapes){
             place(shapes[x])
         }
@@ -269,7 +263,7 @@ var IPMapper = {
                 map: IPMapper.map,
                 fillColor: '#F00',
                 fillOpacity: .4,
-                id: item["ID"],
+                id: google.maps.geometry.encoding.encodePath(item["PATH"]),
                 strokeWeight: 2,
                 clickable: true,
                 editable: true,
@@ -292,16 +286,21 @@ var IPMapper = {
         allMarkers[id].banned=1;
         IPMapper.colorOne(id);
     },
-    placeIPMarker: function(marker, latlng, contentString){ //place Marker on Map
-
+    toggle_ban: function(chk_bx, markerid){
+        if(chk_bx.checked) {
+            IPMapper.oneBan(markerid);
+        }else{
+            IPMapper.oneRem(markerid);
+        }
+    },
+    placeIPMarker: function(marker, latlng, contentString){
         marker.setPosition(latlng);
+        if(marker.banned == 1)
+            contentString += '<div id="fancy"> <span class="bigcheck"> <label class="bigcheck"><input type="checkbox" checked class="bigcheck" onchange="IPMapper.toggle_ban(this,\''+marker.id+'\');" name="cheese" value="yes"/> <span class="bigcheck-target"></span> </label> </span></div>';
+        else
+            contentString += '<div id="fancy"><span class="bigcheck"> <label class="bigcheck"><input type="checkbox" class="bigcheck" onchange="IPMapper.toggle_ban(this,\''+marker.id+'\');" name="cheese" value="yes"/> <span class="bigcheck-target"></span> </label> </span></div>';
+
         google.maps.event.addListener(marker, 'click', function() {
-            // if(marker.banned == 1) {
-            //     contentString += '<button onclick="IPMapper.oneRem(\''+marker.id+'\');">' + 'Un-Ban User' + '</button>';
-            // }
-            // else {
-            //     contentString += '<button onclick="IPMapper.oneBan(\''+marker.id+'\');">' + 'Ban User' + '</button>';
-            // }
             IPMapper.getIPInfoWindowEvent(marker, contentString);
             IPMapper.map.panTo(marker.getPosition());
         });
@@ -344,14 +343,6 @@ var IPMapper = {
                 }
             });
             var latlng = new google.maps.LatLng(latitude, longitude);
-            // if(polygons.length > 0){
-            //     for(var x  = 0; x< polygons.length; x++) {
-            //         if (google.maps.geometry.poly.containsLocation(latlng, polygons[x])) {
-            //             banned = true;
-            //         }
-            //     }
-            //
-            // }
             var ibanned = data["banned"];
             var marker = new google.maps.Marker({ //create Map Marker
                 map: IPMapper.map,
@@ -366,7 +357,6 @@ var IPMapper = {
                         fillColor: (ibanned ==1) ? "#00" : "#F00",
                         fillOpacity: (ibanned ==1) ? 0.6 : 0.4,
                         strokeWeight: 0.5
-                        // strokeColor: 'green'
                 }
             });
             if(marker){

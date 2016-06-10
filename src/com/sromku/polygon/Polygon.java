@@ -106,8 +106,7 @@ public class Polygon
 				_sides.add(new Line(_vertexes.get(_vertexes.size() - 1), _vertexes.get(0)));
 			}
 
-			Polygon polygon = new Polygon(_sides, _boundingBox);
-			return polygon;
+			return new Polygon(_sides, _boundingBox);
 		}
 
 		/**
@@ -261,8 +260,7 @@ public class Polygon
 		float epsilon = (_boundingBox.xMax - _boundingBox.xMin) / 100f;
 		Point outsidePoint = new Point(_boundingBox.xMin - epsilon, _boundingBox.yMin);
 
-		Line vector = new Line(outsidePoint, point);
-		return vector;
+		return new Line(outsidePoint, point);
 	}
 
 	/**

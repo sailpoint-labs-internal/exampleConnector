@@ -112,7 +112,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
         String zip_code = test.getString("zip_code");
         String time_zone = test.getString("time_zone");
 
-        //country_code":"US","country_name":"United States","region_code":"TX","region_name":"Texas","city":"Austin","zip_code":"78759","time_zone":"America/Chicago","latitude":30.4,"longitude":-97.7528,"metro_code":635}
 
         String ip_address = request.getHeader("X-FORWARDED-FOR");
         if (ip_address == null) {
@@ -123,53 +122,52 @@ public class GeoMapResource extends AbstractPluginRestResource {
             Identity loggedInUser = getLoggedInUser();
             String identity_id = loggedInUser.getId();
 
-//            boolean banned = false;
-            if (loggedInUser != null) {
-                System.out.println("Connecting to database...");
-                SailPointContext context = SailPointFactory.getCurrentContext();
-                Connection conn = context.getJdbcConnection();
-                Polygon.Builder poly = new Polygon.Builder();
+            System.out.println("Connecting to database...");
+            SailPointContext context = SailPointFactory.getCurrentContext();
+            Connection conn = context.getJdbcConnection();
+//            Connection conn = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
+            Polygon.Builder poly = new Polygon.Builder();
 
-                String sql = "select ID, PATH from map_polygons;";
-                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-                    try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                        while (rs.next()) {
-                            JSONArray path = new JSONArray(rs.getString("PATH"));
-                            for(int x = 0; x<path.length(); x++){
-                                JSONObject point = (JSONObject) path.get(x);
-                                double lat = point.getDouble("lat");
-                                double lng = point.getDouble("lng");
-                                Point p = new Point((float) lat, (float) lng);
-                                poly.addVertex(p);
-                            }
-                            poly.build();
-                            Polygon g = new Polygon(poly._sides, poly._boundingBox);
-
-                            if(g.contains(new Point((float)latitude, (float)longitude))){
-                                System.out.println("BANNEDDD ");
-                                return Response.ok().entity(1).build(); //seems unsafe?
-                            }
-                        }
+            String sql = "select ID, PATH from map_polygons;";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            double lat; double lng;
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    JSONArray path = new JSONArray(rs.getString("PATH"));
+                    for(int x = 0; x<path.length(); x++){
+                        JSONObject point = (JSONObject) path.get(x);
+                        lat = point.getDouble("lat");
+                        lng = point.getDouble("lng");
+                        Point p = new Point((float) lat, (float) lng);
+                        poly.addVertex(p);
                     }
-                    sql = "select identity, ip from geo_table where banned =1;";
-                    stmt = conn.prepareStatement(sql);
-                    try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                            while (rs.next()) {
-                                if(rs.getString("identity").equals(identity_id) && rs.getString("ip").equals(ip_online)){
-                                    System.out.println("BANNEDDD ");
-                                    return Response.ok().entity(1).build(); //seems unsafe?
-                                }
+                    poly.build();
+                    Polygon g = new Polygon(poly._sides, poly._boundingBox);
 
-                            }
+                    if(g.contains(new Point((float)latitude, (float)longitude))){
+                        System.out.println("BANNEDDD ");
+                        return Response.ok().entity(1).build(); //seems unsafe?
+                    }
+                }
+            }
+            sql = "select identity, ip from geo_table where banned =1;";
+            stmt = conn.prepareStatement(sql);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                    while (rs.next()) {
+                        if(rs.getString("identity").equals(identity_id) && rs.getString("ip").equals(ip_online)){
+                            System.out.println("BANNEDDD ");
+                            return Response.ok().entity(1).build(); //seems unsafe?
                         }
 
-                    System.out.println("valid user...");
-                    String uname = loggedInUser.getDisplayName();
-                    sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online, country_code, country_name, region_code, region_name, city, zip_code, time_zone);
-                    stmt = conn.prepareStatement(sql);
-                    stmt.executeUpdate(sql);
-                    System.out.println("insert complete! ----- ALL VALID!!");
+                    }
                 }
+
+            System.out.println("valid user...");
+            String uname = loggedInUser.getDisplayName();
+            sql = String.format("insert into geo_table (ID, user_name, session_id, ip_header, identity, login_time, latitude, longitude, ip, country_code, country_name, region_code, region_name, city, zip_code, time_zone) values ('%s', '%s', '%s', '%s', '%s', NOW(), '%.4f', '%.4f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE login_time=NOW();", identity_id, uname, session_id, ip_address, identity_id, latitude, longitude, ip_online, country_code, country_name, region_code, region_name, city, zip_code, time_zone);
+            stmt = conn.prepareStatement(sql);
+            stmt.executeUpdate(sql);
+            System.out.println("insert complete! ----- ALL VALID!!");
         } catch (Exception e) {
             log.error(e);
             System.out.println(e);
@@ -193,6 +191,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
         try {
             SailPointContext context = SailPointFactory.getCurrentContext();
             Connection conn = context.getJdbcConnection();
+//            Connection conn = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
             String sql = String.format("update geo_table set banned = 1 where id='%s';", id);
 
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -226,7 +225,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
 
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate(sql);
-                System.out.println("insert complete! ----- PATH VALID!!");
+                System.out.println("insert complete! ----- removing ban!! "+id);
             }
         } catch (Exception e) {
             log.error(e);
@@ -279,7 +278,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
     @Path("killShape")
     @Consumes("application/x-www-form-urlencoded")
     public Response killShape(@FormParam("json") String json) throws GeneralException, JSONException {
-        json.replaceAll("\\[\\]", "");
         JSONObject test = new JSONObject(json);
         String id = test.getString("ID");
         //losadsads
@@ -310,32 +308,6 @@ public class GeoMapResource extends AbstractPluginRestResource {
      * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
      */
     @GET
-    @Path("getLoginLocations/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String
-    getLoginLocations() throws GeneralException, SQLException {
-        try {
-            System.out.println("Uploading DB to map...");
-            SailPointContext context = SailPointFactory.getCurrentContext();
-            Connection conn = context.getJdbcConnection();
-
-            String sql = "SELECT * FROM geo_table";
-            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-
-            try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                    String ret = rStoJason(rs);
-                    return ret;
-            }
-        } catch (Exception e) {
-            System.out.println(e + " ERRORRR");
-            log.error(e);
-        }
-        return null;
-    }
-    /**
-     * Plot our geoMap visual (google api) with coordinates taken from the geocoding of mysql DB ip values
-     */
-    @GET
     @Path("getLShape/")
     @Produces(MediaType.APPLICATION_JSON)
     public String
@@ -349,8 +321,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                String ret = rStoJason(rs);
-                return ret;
+                return rStoJason(rs);
             }
         } catch (Exception e) {
             System.out.println(e + " ERRORRR");
@@ -376,8 +347,7 @@ public class GeoMapResource extends AbstractPluginRestResource {
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             try (java.sql.ResultSet rs = stmt.executeQuery(sql)) {
-                String ret = rStoJason(rs);
-                return ret;
+                return rStoJason(rs);
             }
         } catch (Exception e) {
             System.out.println(e + " ERRORRR");

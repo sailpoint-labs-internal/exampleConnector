@@ -24,11 +24,7 @@ $(document).ready(function () {
                         // doLogout();
                     }
                 }
-            }).done(function(out){
-                // console.log(out);
-                // alert(out);
-
-            });
+            })
         });
 });
 
