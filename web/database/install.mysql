@@ -1,7 +1,7 @@
 select 1;
 
 CREATE  TABLE `geo_table` (
-  `ID` int NOT NULL AUTO_INCREMENT,
+  `ID` VARCHAR(255),
   `user_name` VARCHAR(255),
   `session_id` VARCHAR(255),
   `ip_header` VARCHAR(255),
@@ -17,11 +17,11 @@ CREATE  TABLE `geo_table` (
   `city` VARCHAR(255),
   `zip_code` VARCHAR(255),
   `time_zone` VARCHAR(255),
-  `banned` int DEFAULT 0, 
+  `banned` int DEFAULT 0,
   PRIMARY KEY (`ID`, `session_id`, `ip`));
 
 CREATE TABLE `map_polygons` (
-  `ID` int NOT NULL AUTO_INCREMENT,
+  `ID`int not NULL AUTO_INCREMENT,
   `MAP_OWNER` VARCHAR(255) NOT NULL,
   `type` VARCHAR(255),
   `PATH` TEXT NOT NULL,

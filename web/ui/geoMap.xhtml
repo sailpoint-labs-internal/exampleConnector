@@ -63,10 +63,10 @@
 
 
     <div style="height: 2px"></div>
-    <div id="map" style="height: 750px;"></div>
+    <div id="map" style="height: 100vh;"></div>
 
     <button style="display: inline">Toggle Table</button>
-    <div style="padding-left: 20px">
+    <div style="padding: 6px; background: #FFF; position: absolute; bottom:0;">
     <!--<h2> other formatting items </h2>-->
         <table id="myTable" class="table hover">
         <!--<table id="myTable" class="table">-->
@@ -104,7 +104,7 @@
                         "bProcessing": true,
                         "fnRowCallback": function (nRow, aData, iDisplayIndex) {
 
-                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
+                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers[\''+ aData["ID"]+'\'],\'click\');">' + aData["user_name"] + '</a>');
                             // Bind click event
                             $(nRow).click(function() {
                                 google.maps.event.trigger(allMarkers[aData["ID"]],'click');
@@ -154,17 +154,6 @@
 
     </script>
 
-<!--<script type="text/javascript">-->
-<!--function update_value(chk_bx){-->
-    <!--if(chk_bx.checked)-->
-    <!--{-->
-        <!--var a="checked";}-->
-    <!--else{-->
-        <!--var a="not checked";-->
-    <!--}-->
-    <!--document.getElementById('result').innerHTML ='result '+a;-->
-
-<!--}-->
 
 <!--</script>-->
 <!--<input type="checkbox" value="1" onchange="update_value(this);"/>Checkbox<br/>-->

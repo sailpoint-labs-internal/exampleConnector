@@ -104,7 +104,7 @@
                         "bProcessing": true,
                         "fnRowCallback": function (nRow, aData, iDisplayIndex) {
 
-                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
+                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers[\''+ aData["ID"]+'\'],\'click\');">' + aData["user_name"] + '</a>');
                             // Bind click event
                             $(nRow).click(function() {
                                 google.maps.event.trigger(allMarkers[aData["ID"]],'click');
