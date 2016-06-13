@@ -44,7 +44,7 @@
 
         <div id="c1">
                 <input id="ip" name="ip" type="text"/>
-                <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode</button>
+                <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode IP</button>
                 <input id="regName" name="regName" type="text"/>
                 <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Mark User Name</button>
         </div>
@@ -69,7 +69,7 @@
     <div style="height: 2px"></div>
     <div id="map" style="height: 750px;"></div>
 
-    <button style="display: inline">Toggle Table</button>
+    <!--<button style="display: inline">Toggle Table</button>-->
     <div style="padding-left: 20px">
     <!--<h2> other formatting items </h2>-->
         <table id="myTable" class="table hover">
@@ -154,7 +154,6 @@
         $("button").click(function() {
             $("#myTable").toggle();
         });
-        $("#myTable").hide();
 
         //]]>
     </script>

@@ -22,7 +22,7 @@ getDBhome(function insertLogin(data){
     console.log(data + " is data");
     if(data) {
         data = data[0];
-        $('img.pull-right').replaceWith('<div id="lastLog" class="lastLog" style="display: inline; float: right; color: black">Last Login: '
+        $('#menuMainDiv header.container-fluid.bg-info.dker.nav-bar.topbar img.pull-right').replaceWith('<div id="lastLog" class="lastLog" style="display: inline; float: right; color: black">Last Login: '
                 + data['login_time'] + " ("+ data['country_code']+") " + data['city'] +", " + data['region_name'] +": "+data['zip_code']
                 +'</div>');
     }
