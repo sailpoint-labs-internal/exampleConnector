@@ -27,10 +27,14 @@
 
   <target name="compile">
     <mkdir dir="build/classes"/>
+    <!--<javac srcdir="src" destdir="build/classes" debug="true" classpathref="build.compile.classpath"-->
+           <!--includeantruntime="last">-->
+    <!--</javac>-->
     <javac srcdir="src" destdir="build/classes" debug="true" classpathref="build.compile.classpath"
-           includeantruntime="last">
-    </javac>
+           target="1.7" source="1.7" includeantruntime="last">
+            </javac>
     <copy todir="build/classes">
+
       <fileset dir="src">
         <include name="**/*.hbm.xml"/>
       </fileset>
