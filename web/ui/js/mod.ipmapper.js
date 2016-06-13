@@ -15,7 +15,7 @@ var IPMapper = {
     baseUrl: "http://freegeoip.net/json/",
     initializeMap: function(mapId){
         IPMapper.latlngbound = new google.maps.LatLngBounds();
-        var latlng = new google.maps.LatLng(0, 0);
+        var latlng = new google.maps.LatLng(18.83, -38.131);
         //set Map options
         var mapOptions = {
             zoom: 2,

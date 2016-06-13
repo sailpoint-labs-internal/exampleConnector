@@ -18,7 +18,7 @@ CREATE  TABLE `geo_table` (
   `zip_code` VARCHAR(255),
   `time_zone` VARCHAR(255),
   `banned` int DEFAULT 0,
-  PRIMARY KEY (`ID`, `session_id`, `ip`));
+  PRIMARY KEY (`ID`, `ip`));
 
 CREATE TABLE `map_polygons` (
   `ID` VARCHAR(255),

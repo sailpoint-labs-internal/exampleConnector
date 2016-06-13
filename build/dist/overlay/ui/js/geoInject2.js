@@ -14,15 +14,21 @@
 var geoMapUrl = SailPoint.CONTEXT_PATH + '/pluginPage.jsf?pn=GeoMap';
 
 jQuery(document).ready(function(){
-    jQuery("ul.navbar-right li:first")
-        .before(
-            '<li class="dropdown">' +
-            '        <a href="' + geoMapUrl + '" tabindex="0" role="menuitem" data-snippet-debug="off">' +
-            '            <i role="presenation" class="fa fa-exclamation fa-lg example"></i>' +
-            '        </a>' +
-            '</li>'
-        );
+    jQuery("ul.navbar-left li:last").after('<li role="presentation" aria-hidden="true" class="divider"></li><li role="presentation"> <a href="'+geoMapUrl+'" role="menuitem" class="menuitem" tabindex="0"> Geo Map Plugin </a></li>');
+    // jQuery("ul.navbar-right li:first")
+    //     .before(
+    //         '<li class="dropdown">' +
+    //         '        <a href="' + geoMapUrl + '" tabindex="0" role="menuitem" data-snippet-debug="off">' +
+    //         '            <i role="presenation" class="fa fa-exclamation fa-lg example"></i>' +
+    //         '        </a>' +
+    //         '</li>'
+    //     );
 });
+
+
+// jQuery("ul.navbar-left li:last").after('"<li role="presentation" aria-hidden="true" class="divider"></li>" "<li role="presentation"> " <a href="/pluginPage.jsf?pn=GeoMap" role="menuitem" class="menuitem" tabindex="0"> Geo Map Plugin </a></li>"');
+
+
 
 function getDBhome(callback) {
     $.ajax({
