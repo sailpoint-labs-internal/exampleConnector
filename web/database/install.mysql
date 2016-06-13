@@ -18,12 +18,12 @@ CREATE  TABLE `geo_table` (
   `zip_code` VARCHAR(255),
   `time_zone` VARCHAR(255),
   `banned` int DEFAULT 0,
-  PRIMARY KEY (`ID`, `session_id`, `ip`));
+  PRIMARY KEY (`ID`, `ip`));
 
 CREATE TABLE `map_polygons` (
-  `ID`int not NULL AUTO_INCREMENT,
+  `ID` VARCHAR(255),
   `MAP_OWNER` VARCHAR(255) NOT NULL,
   `type` VARCHAR(255),
   `PATH` TEXT NOT NULL,
-	PRIMARY KEY (`ID`, `MAP_OWNER`));
+    PRIMARY KEY (`ID`, `MAP_OWNER`));
 

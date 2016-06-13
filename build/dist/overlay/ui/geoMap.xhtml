@@ -1,6 +1,10 @@
-﻿<!DOCTYPE html PUBLIC
-        "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!--﻿﻿<!DOCTYPE html PUBLIC-->
+        <!--"-//W3C//DTD XHTML 1.0 Transitional//EN"-->
+        <!--"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <!-- (c) Copyright 2016 SailPoint Technologies, Inc., All Rights Reserved. -->
 
@@ -104,7 +108,7 @@
                         "bProcessing": true,
                         "fnRowCallback": function (nRow, aData, iDisplayIndex) {
 
-                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers[\''+ aData["ID"]+'\'],\'click\');">' + aData["user_name"] + '</a>');
+                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
                             // Bind click event
                             $(nRow).click(function() {
                                 google.maps.event.trigger(allMarkers[aData["ID"]],'click');
@@ -129,7 +133,6 @@
                 console.log(e);
             }
         });
-        //]]>
         var table = null;
         var selectedShape;
         function clearSelection()
@@ -152,13 +155,25 @@
             $("#myTable").toggle();
         });
 
+        //]]>
     </script>
 
+<!--<script type="text/javascript">-->
+<!--function update_value(chk_bx){-->
+    <!--if(chk_bx.checked)-->
+    <!--{-->
+        <!--var a="checked";}-->
+    <!--else{-->
+        <!--var a="not checked";-->
+    <!--}-->
+    <!--document.getElementById('result').innerHTML ='result '+a;-->
+
+<!--}-->
 
 <!--</script>-->
 <!--<input type="checkbox" value="1" onchange="update_value(this);"/>Checkbox<br/>-->
 
-    <h2> result is <span id="result"></span></h2>
+    <!--<h2> result is <span id="result"></span></h2>-->
 </ui:composition>
 </body>
 </html>
