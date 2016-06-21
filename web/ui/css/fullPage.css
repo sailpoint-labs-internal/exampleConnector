@@ -1,0 +1,229 @@
+#myTable tr{
+    border: solid 1px black;
+}
+
+#myTable td {
+    font-size: 16px;
+    padding-right: 20px;
+}
+
+#myTable th {
+    font-size: 18px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+
+h1.geoTitle{
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: inline;
+}
+span#thins{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 36px;
+    display: inline-block;
+}
+
+
+button.cusbutton {
+    -webkit-appearance: none; /* Prevent native styling on iOS for disabled buttons */
+    -webkit-border-radius: 2px !important;
+    -moz-border-radius: 2px !important;
+    border-radius: 2px !important;
+    border: solid 1px #00799d !important;
+    color: #FFFFFF !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 10px 5px 10px !important;
+    cursor: pointer;
+    background-image: none !important;
+    background-color: #037da1 !important;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0097c4), color-stop(100%, #037da1)) !important;
+    background-image: -webkit-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -moz-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -o-linear-gradient(top, #0097c4, #037da1) !important;
+    background-image: -ms-linear-gradient(top,#0097c4, #037da1) !important;
+    background-image: linear-gradient(top, #0097c4, #037da1) !important;
+}
+
+
+div#map{
+    border: 1px solid #3f618b;
+    border-right-width: 0;
+    border-left-width: 0;
+}
+
+div#c1{
+    float: left;
+    width: 33%;
+    bottom: 0;
+}
+
+div#c3{
+    float: right;
+    padding-right: 10px;
+    /*width: 33%;*/
+}
+div#c2{
+    display: inline-block;
+    text-align: center;
+    margin:0 auto;
+    width:33%;
+    bottom: 3px;
+}
+div#titleo{
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+}
+
+/*div#lastLog{*/
+.lastLog{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+span.bigcheck-target {
+    font-family: FontAwesome; /* use an icon font for the checkbox */
+}
+input[type='checkbox'].bigcheck {
+    position: relative;
+    left: -999em; /* hide the real checkbox */
+}
+
+input[type='checkbox'].bigcheck + span.bigcheck-target:after {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 20px; /* set this to whatever size you want */
+    color: #2BA4C7;
+    position: relative;
+    float: right;
+    content: 'Un-Banned';
+}
+input[type='checkbox'].bigcheck:checked + span.bigcheck-target:after {
+    font-family: sans-serif;
+    font-size: 20px; /* set this to whatever size you want */
+    font-weight: bold;
+    color: red;
+    position: relative;
+    float: right;
+    content: 'Banned';
+}
+input[type='checkbox'].bigcheck + span.bigcheck-target:before {
+    float: left;
+    color: #2BA4C7;
+    content: "\f096"; /* In fontawesome, is an open square (fa-square-o) */
+}
+input[type='checkbox'].bigcheck:checked + span.bigcheck-target:before {
+    float: left;
+    color: red;
+    content: "\f046"; /* fontawesome checked box (fa-check-square-o) */
+}
+
+/* ==== optional - colors and padding to make it look nice === */
+/*check.body {*/
+/*}*/
+div#fancy{
+    padding-top: 5px;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 20px; /* set this to whatever size you want */
+
+}
+
+h2#toggleTable{
+    cursor:pointer;
+}
+
+span.bigcheck {
+    display: block;
+    /*padding: 0.5em;;*/
+}
+div#myMap{
+     max-height:80vh;
+}
+
+div#myMap2{
+    max-height:90vh;
+}
+/*[ui-view] {*/
+
+.ui-view-container {
+    position: relative;
+    /*float: left;*/
+    width: 100%;
+}
+
+.main{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*!*issue is here========================*!*/
+.main.ng-enter{
+    /*-webkit-transition: all 1s ease;*/
+    /*transition: all 1s ease;*/
+    transition: all 1s ease;
+    opacity: 0;
+}
+.main.ng-leave{
+    /*-webkit-transition: all 1s ease;*/
+    /*transition: all 1s ease;*/
+    transition: all 1s ease;
+    opacity: 1;
+
+}
+
+.main.ng-enter.ng-enter-active {
+    opacity: 1;
+    /*top: 0;*/
+    /*transform: translateY(0);*/
+}
+
+.main.ng-leave.ng-leave-active {
+    /*-webkit-transition: all 1s ease;*/
+    /*transition: all 1s ease;*/
+    /*transform: translateY(-100%);*/
+    /*top: 100%;*/
+    opacity: 0;
+}
+
+/* main page stuff */
+.helloHTML{
+     /*background-color: black;*/
+     background: linear-gradient(-90deg, #33ccff, #0099cc);
+     height:100vh;
+     font-size: 24px;
+     color: white;
+ }
+.helloHTML h1{
+    color: white;
+    font-size: 52px;
+}
+
+
+/*#menu #list {*/
+    /*max-height: 0;*/
+    /*transition: max-height 0.15s ease-out;*/
+    /*overflow: hidden;*/
+    /*background: #d5d5d5;*/
+/*}*/
+
+#toggleTable:hover #list {
+    max-height: 500px;
+    transition: max-height 0.25s ease-in;
+}
+

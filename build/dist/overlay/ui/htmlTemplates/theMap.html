@@ -1,0 +1,123 @@
+<div class="myMap">
+
+
+<link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'/>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"/>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+
+<div style="height: 8px"></div>
+<div id="titleo" style="display: inline">
+    <div id="c1">
+        <input id="ip" name="ip" type="text"/>
+        <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode IP</button>
+        <input id="regName" name="regName" type="text"/>
+        <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Mark User Name</button>
+    </div>
+    <div id="c2">
+        <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
+    </div>
+    <div id="c3">
+        <button ui-sref="mainMenu">BACK TO MAIN MENU</button>
+    </div>
+</div>
+
+
+<!--<div id="map" style="height: 750px;"></div>-->
+    <div id="myMap2">
+<div id="map" style="height: 80vh;"></div>
+
+<!--<h2 id="toggleTable">Toggle Table</h2>-->
+<h2 id="toggleTable" slide-toggle="#dyTable" >Toggle Table</h2>
+<div id="dyTable" class ="slideable" style="padding-left: 20px">
+    <table id="myTable" class="table hover">
+        <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Session Id</th>
+            <th>IP</th>
+            <th>Login Time</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>IP Header</th>
+            <th>ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+    </div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        try{
+            IPMapper.initializeMap("map");
+            //shapes first to trigger
+            get_shapes(function (data) {
+                IPMapper.placeShapesFromJSON(data);
+            });
+            getDB(function(data){
+                IPMapper.placeIPMarkerFromJSON(data);
+                table = $('#myTable').DataTable({
+                    "bProcessing": true,
+                    "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+
+                        $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
+                        // Bind click event
+                        $(nRow).click(function() {
+                            google.maps.event.trigger(allMarkers[aData["ID"]],'click');
+
+                        });
+                        return nRow;
+                    },
+                    "aaData": JSON.parse(data),
+                    "aoColumns": [
+                        {"mData": "user_name"},
+                        {"mData": "session_id"},
+                        {"mData": "ip"},
+                        {"mData": "login_time"},
+                        {"mData": "latitude"},
+                        {"mData": "longitude"},
+                        {"mData": "ip_header"},
+                        {"mData": "ID"}
+                    ]
+                });
+            });
+        }catch(e){
+            console.log(e);
+        }
+    });
+
+    var table = null;
+    var selectedShape;
+    function clearSelection()
+    {
+        if(selectedShape)
+        {
+            selectedShape.setEditable(false);
+            selectedShape = null;
+        }
+    }
+//    var bool = false;
+//    $( "#toggleTable" ).click(function() {
+//        if (bool == false) {
+//            bool = !bool;
+//            $("#map").animate({height: "60vh"}, "slow");
+//        }
+//        else {
+//            bool = !bool;
+//            $("#map").animate({height: "80vh"}, "slow");
+//        }
+//    $( this ).animate({ height: 100 }, 1000 );
+//    });
+
+    function setSelection(shape)
+    {
+        clearSelection();
+        selectedShape = shape;
+        shape.setEditable(true);
+    }
+    //]]>
+</script>
+</div>

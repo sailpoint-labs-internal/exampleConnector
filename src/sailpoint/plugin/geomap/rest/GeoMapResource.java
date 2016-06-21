@@ -186,8 +186,8 @@ public class GeoMapResource extends AbstractPluginRestResource {
             conn = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
             String sql = String.format("update geo_table set banned = banned + 1 where id='%s';", id);
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.executeUpdate(sql);
-                log.debug("update complete..banning " + id);
+            stmt.executeUpdate(sql);
+            log.debug("update complete..banning " + id);
 
         } catch (Exception e) {
             log.error(e);
@@ -243,19 +243,19 @@ public class GeoMapResource extends AbstractPluginRestResource {
         String type= test.getString("type");
         String id=test.getString("ID");
         JSONArray path = test.getJSONArray("path");
-       // JSONArray markers = test.getJSONArray("markers");
+        // JSONArray markers = test.getJSONArray("markers");
 
         Connection conn = null;
         try {
-                Identity loggedInUser = getLoggedInUser();
-                String uname = loggedInUser.getDisplayName();
-                log.debug("Connecting to database...");
-                conn  = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
-                String sql = String.format("insert into map_polygons (ID, MAP_OWNER, TYPE, PATH) values ('%s', '%s', '%s', '%s');", id, uname, type, path.toString());
+            Identity loggedInUser = getLoggedInUser();
+            String uname = loggedInUser.getDisplayName();
+            log.debug("Connecting to database...");
+            conn  = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
+            String sql = String.format("insert into map_polygons (ID, MAP_OWNER, TYPE, PATH) values ('%s', '%s', '%s', '%s');", id, uname, type, path.toString());
 
-                try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.executeUpdate(sql);
-                    log.debug("insert complete! ----- PATH VALID!!");
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate(sql);
+                log.debug("insert complete! ----- PATH VALID!!");
             }
         } catch (Exception e) {
             log.error(e);

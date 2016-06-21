@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
 
 
 function getDBhome(callback) {
-    $.ajax({
+    jQuery.ajax({
         method: "GET",
         beforeSend: function (request) {
             request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
@@ -18,13 +18,14 @@ function getDBhome(callback) {
         callback(x);
     });
 }
-getDBhome(function insertLogin(data){
+jQuery(document).ready(getDBhome(function insertLogin(data){
     console.log(data + " is data");
     if(data) {
         data = data[0];
-        $('#menuMainDiv header.container-fluid.bg-info.dker.nav-bar.topbar img.pull-right').replaceWith('<div id="lastLog" class="lastLog" style="display: inline; float: right; color: black">Last Login: '
+        jQuery('#menuMainDiv header.container-fluid.bg-info.dker.nav-bar.topbar img.pull-right').replaceWith('<div id="lastLog" class="lastLog" style="display: inline; float: right; color: black">Last Login: '
                 + data['login_time'] + " ("+ data['country_code']+") " + data['city'] +", " + data['region_name'] +": "+data['zip_code']
                 +'</div>');
     }
-});
+})
+);
 

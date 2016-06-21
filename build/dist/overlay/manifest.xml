@@ -31,7 +31,6 @@
                                                                 <String>{plugin_root}/ui/css/geoMap.css</String>
                                                             </StylesheetIncludes>
                                                         </Snippet>
-        
                                                         <Snippet pagesMatchRegExPattern=".*" isMobile="true"
                                                                isDesktop="true" rightRequired="geoMapPluginIconRight" >
                                                                <ScriptIncludes>
