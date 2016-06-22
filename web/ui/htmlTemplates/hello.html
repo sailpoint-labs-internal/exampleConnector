@@ -1,0 +1,112 @@
+<div style="margin: auto; text-align: center" class="helloHTML">
+<!--<button class="cusbutton" style="font-size: 30px" ui-sref="mapView">CLICK ME MAP</button>-->
+<!--<button ui-sref="reportView">CLICK ME REPORTS</button>-->
+<button class="ctrl-standard typ-subhed fx-sliderIn" ui-sref="mapView"><span class="regFont">OPEN</span> MAP</button>
+<button class="ctrl-standard typ-subhed fx-sliderIn" ui-sref="reportView"><span ckass="regFont">OPEN</span> REPORT</button>
+
+    <!--<iframe id="my_iframe" style="display:none;"></iframe>-->
+    <!--<a class="sample " href="https://pbs.twimg.com/profile_images/732258093870911489/AN2FcC8A_normal.jpg" style="visibility: hidden" download></a>-->
+    <!--<script>-->
+    <!--$(document).ready(function() {-->
+        <!--$('.sample')[0].click();-->
+    <!--});-->
+    <!--</script>-->
+
+
+    <style>
+        body::before {
+            display: none;
+        }
+        .typ-subhed {
+            font-family: 'Oswald', sans-serif;
+            font-size: 35px;
+            line-height: 37px;
+            font-weight: 100;
+            letter-spacing: 4px;
+            height: 80px;
+            width: 400px;
+        }
+        /* lets create a container and put it in the middle */
+        .container {
+            height: 100%;
+            width: 50%;
+            margin: auto;
+        }
+        .container > * {
+            width: 100%;
+        }
+        .ctrl-standard.fx-sliderIn {
+            margin-top: 25%;
+            /*background:linear-gradient(#cceeff)*/
+            /*background: linear-gradient(-90deg, #cceeff, #FFFFFF);*/
+            background-color: #FFFFFF;
+            color: #2BA4C7;
+            border-color: #FFFFFF;
+        }
+        .ctrl-standard.fx-sliderIn::after {
+            background: #2BA4C7;
+        }
+        .ctrl-standard.fx-sliderIn.is-reversed::after {
+            width: 300%;
+        }
+        .ctrl-standard.fx-sliderIn.is-reversed:hover {
+            color: #2BA4C7;
+        }
+        .ctrl-standard.fx-sliderIn.is-reversed:hover::after {
+            width: 0;
+        }
+        [class*="ctrl-"] {
+            padding: 5px 10px;
+            border-radius: 2px;
+            border: 1px solid #ffffff;
+        }
+        [class*="ctrl-"][class*="fx-"]:hover,
+        [class*="ctrl-"][class*="fx-"].active {
+            color: #ffffff;
+        }
+        [class*="ctrl-"][class*="fx-"].is-reversed {
+            color: #ffffff;
+        }
+
+        [class*="fx-"],
+        [class*="fx-"]:hover {
+            -webkit-transition: color 0.5s  ease-in-out;
+            transition: color 0.5s  ease-in-out;
+        }
+        [class*="fx-"]:not(.fx-dyna) {
+            position: relative;
+            z-index: 1;
+            -webkit-transition-delay: 0.2s !important;
+            transition-delay: 0.2s !important;
+            overflow: hidden;
+        }
+        [class*="fx-"]:not(.fx-dyna)::after,
+        [class*="fx-"]:not(.fx-dyna)::before {
+            content: "";
+            display: block;
+            position: absolute;
+            z-index: -1;
+        }
+        .fx-sliderIn::after {
+            -webkit-transition: width 0.5s ease-in-out;
+            transition: width 0.5s ease-in-out;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 0;
+        }
+        .fx-sliderIn:hover::after,
+        .fx-sliderIn.active::after {
+            -webkit-transition: width 0.5s ease-in-out;
+            transition: width 0.5s ease-in-out;
+            width: 100%;
+        }
+        :checked + .fx-sliderIn::after,
+        .fx-sliderIn.active::after {
+            width: 300%;
+        }
+
+
+    </style>
+</div>

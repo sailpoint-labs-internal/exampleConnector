@@ -1,13 +1,5 @@
-﻿<!--﻿﻿<!DOCTYPE html PUBLIC-->
-        <!--"-//W3C//DTD XHTML 1.0 Transitional//EN"-->
-        <!--"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
-
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-
-<!-- (c) Copyright 2016 SailPoint Technologies, Inc., All Rights Reserved. -->
-
+﻿<!-- (c) Copyright 2016 SailPoint Technologies, Inc., All Rights Reserved. -->
+<!DOCTYPE html>
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:sp="http://sailpoint.com/ui"
@@ -18,145 +10,42 @@
         xmlns:t="http://myfaces.apache.org/tomahawk">
 
 <head>
-<title>GeoMap plugin</title>
+    <title>GeoMap plugin</title>
 </head>
-<body>
+
 
 
 <ui:composition>
 
+    <body ng-app="geoApp">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A&amp;libraries=drawing,geometry"></script>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="ui/js/lib/angular/angular-animate.min.js"></script>
 
-    <sp:style
+
+    <sp:style enabled="false"
             serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
-        <!--<src>ng-modalDialog.css?#{debug.revision}</src>-->
+        <src>fullPage.css</src>
     </sp:style>
 
-    <!--<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'></link>-->
-    <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'></link>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"></link>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"/>
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-    <div style="height: 8px"></div>
-    <div id="titleo" style="display: inline">
 
-        <div id="c1">
-                <input id="ip" name="ip" type="text"/>
-                <button class="cusbutton" onclick="IPMapper.addIPMarkerCustom($('#ip').val());">Geocode IP</button>
-                <input id="regName" name="regName" type="text"/>
-                <button class="cusbutton" onclick="IPMapper.swap_color($('#regName').val());">Mark User Name</button>
-        </div>
 
-        <div id="c2">
-        <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
-        </div>
-
-        <div id="c3">
-        </div>
-
-    </div>
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
-
         <src>mod.ipmapper.js</src>
         <src>queryMap.js</src>
         <src>jquery.dynatable.js</src>
-        </sp:script>
-
-
-    <div style="height: 2px"></div>
-    <div id="map" style="height: 750px;"></div>
-
-    <!--<button style="display: inline">Toggle Table</button>-->
-    <div style="padding-left: 20px">
-    <!--<h2> other formatting items </h2>-->
-        <table id="myTable" class="table hover">
-        <!--<table id="myTable" class="table">-->
-            <thead>
-            <tr>
-                <th>User Name</th>
-                <th>Session Id</th>
-                <th>IP</th>
-                <th>Login Time</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>IP Header</th>
-                <th>ID</th>
-                <!--<th>Blocked</th>-->
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <src>geoAng.js</src>
+    </sp:script>
+    <div class="ui-view-container">
+        <div ui-view="main" class="main"></div>
     </div>
-
-
-    <script type="text/javascript">
-        //<![CDATA[
-        $(document).ready(function(){
-            try{
-                IPMapper.initializeMap("map");
-                //shapes first to trigger
-                get_shapes(function (data) {
-                    IPMapper.placeShapesFromJSON(data);
-                });
-                getDB(function(data){
-                    IPMapper.placeIPMarkerFromJSON(data);
-                    table = $('#myTable').DataTable({
-                        "bProcessing": true,
-                        "fnRowCallback": function (nRow, aData, iDisplayIndex) {
-
-                            $('td:eq(0)', nRow).html('<a href="javascript:google.maps.event.trigger(allMarkers['+ aData["ID"]+'],\'click\');">' + aData["user_name"] + '</a>');
-                            // Bind click event
-                            $(nRow).click(function() {
-                                google.maps.event.trigger(allMarkers[aData["ID"]],'click');
-
-                            });
-                            return nRow;
-                        },
-                        "aaData": JSON.parse(data),
-                        "aoColumns": [
-                            {"mData": "user_name"},
-                            {"mData": "session_id"},
-                            {"mData": "ip"},
-                            {"mData": "login_time"},
-                            {"mData": "latitude"},
-                            {"mData": "longitude"},
-                            {"mData": "ip_header"},
-                            {"mData": "ID"}
-                        ]
-                    });
-                });
-            }catch(e){
-                console.log(e);
-            }
-        });
-        var table = null;
-        var selectedShape;
-        function clearSelection()
-        {
-            if(selectedShape)
-            {
-                selectedShape.setEditable(false);
-                selectedShape = null;
-            }
-        }
-
-        function setSelection(shape)
-        {
-            clearSelection();
-            selectedShape = shape;
-            shape.setEditable(true);
-        }
-
-        $("button").click(function() {
-            $("#myTable").toggle();
-        });
-
-        //]]>
-    </script>
+    </body>
 </ui:composition>
-</body>
 </html>
