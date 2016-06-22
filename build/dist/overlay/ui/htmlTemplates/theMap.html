@@ -17,17 +17,16 @@
         <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
     </div>
     <div id="c3">
-        <button ui-sref="mainMenu">BACK TO MAIN MENU</button>
+        <button class="cusbutton" style="font-size: 20px !important;" ui-sref="mainMenu"><ia class="fa fa-arrow-left" aria-hidden="true"></i> <span class="thinFont"> BACK </span></button>
     </div>
 </div>
 
 
 <!--<div id="map" style="height: 750px;"></div>-->
-    <div id="myMap2">
+<div id="myMap2">
 <div id="map" style="height: 80vh;"></div>
 
-<!--<h2 id="toggleTable">Toggle Table</h2>-->
-<h2 id="toggleTable" slide-toggle="#dyTable" >Toggle Table</h2>
+<h2 id="toggleTable" slide-toggle="#dyTable" onMouseOver="this.style.color='#2BA4C7'" onMouseOut="this.style.color='#000'" >Toggle Table</h2>
 <div id="dyTable" class ="slideable" style="padding-left: 20px">
     <table id="myTable" class="table hover">
         <thead>
@@ -69,6 +68,11 @@
                             google.maps.event.trigger(allMarkers[aData["ID"]],'click');
 
                         });
+                        // Bind click event
+//                        $(nRow).click(function() {
+//                            google.maps.event.trigger(allMarkers[aData["ID"]],'click');
+//
+//                        });
                         return nRow;
                     },
                     "aaData": JSON.parse(data),
@@ -99,18 +103,21 @@
             selectedShape = null;
         }
     }
-//    var bool = false;
-//    $( "#toggleTable" ).click(function() {
-//        if (bool == false) {
-//            bool = !bool;
-//            $("#map").animate({height: "60vh"}, "slow");
-//        }
-//        else {
-//            bool = !bool;
-//            $("#map").animate({height: "80vh"}, "slow");
-//        }
-//    $( this ).animate({ height: 100 }, 1000 );
-//    });
+
+    var bool = false;
+    $( "#toggleTable" ).click(function() {
+        if (bool == false) {
+            bool = !bool;
+            $("#map").animate({height: "60vh"}, "slow");
+        }
+        else {
+            setTimeout(function(){
+            bool = !bool;
+            $("#map").animate({height: "80vh"}, "slow");
+            }, 800);
+        }
+    });
+
 
     function setSelection(shape)
     {

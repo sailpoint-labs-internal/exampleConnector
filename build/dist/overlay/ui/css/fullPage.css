@@ -13,6 +13,19 @@
     font-weight: bold;
 }
 
+span#regFont{
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+}
+
+span#thinFont{
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 100;
+    text-align: center;
+}
 h1.geoTitle{
     font-family: "Roboto";
     font-style: normal;
@@ -33,14 +46,15 @@ span#thins{
 
 
 button.cusbutton {
+    font-family: "Roboto", sans-serif;
+    font-style: normal !important;
     -webkit-appearance: none; /* Prevent native styling on iOS for disabled buttons */
     -webkit-border-radius: 2px !important;
     -moz-border-radius: 2px !important;
     border-radius: 2px !important;
     border: solid 1px #00799d !important;
     color: #FFFFFF !important;
-    font-size: 12px !important;
-    font-weight: bold !important;
+    font-size: 15px !important;
     text-align: center;
     vertical-align: middle;
     padding: 5px 10px 5px 10px !important;
@@ -153,8 +167,9 @@ div#myMap{
      max-height:80vh;
 }
 
-div#myMap2{
+#myMap2{
     max-height:90vh;
+    height:80vh;
 }
 /*[ui-view] {*/
 
@@ -204,15 +219,43 @@ div#myMap2{
 /* main page stuff */
 .helloHTML{
      /*background-color: black;*/
-     background: linear-gradient(-90deg, #33ccff, #0099cc);
-     height:100vh;
+     /*background-image: url("../assets/Basic Map.jpg");*/
+     background: linear-gradient(-90deg, #33ccff, #b3ecff);
+     /*background: url("../assets/Basic Map.jpg");*/
+    background-blend-mode: multiply;
+
+     height: 100vh;
      font-size: 24px;
      color: white;
  }
-.helloHTML h1{
-    color: white;
-    font-size: 52px;
-}
+
+/*.helloHTML:before {*/
+    /*content: " ";*/
+    /*z-index: 10;*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*height: 100%;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*background: rgba(0, 0, 0, 0.5);*/
+/*}*/
+
+/*.helloHTML:after{*/
+    /*content: "";*/
+    /*background: url("../assets/Basic Map.jpg");*/
+    /*opacity: 0.5;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*position: absolute;*/
+    /*z-index: -1;*/
+/*}*/
+/*.helloHTML h1{*/
+    /*color: white;*/
+    /*font-size: 52px;*/
+/*}*/
 
 
 /*#menu #list {*/
@@ -225,5 +268,18 @@ div#myMap2{
 #toggleTable:hover #list {
     max-height: 500px;
     transition: max-height 0.25s ease-in;
+}
+
+
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #b61924;
+    background-image: url("");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
 }
 

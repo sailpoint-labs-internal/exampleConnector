@@ -23,6 +23,8 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="ui/js/lib/angular/angular-animate.min.js"></script>
+
+
     <sp:style enabled="false"
             serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
         <src>fullPage.css</src>
@@ -34,12 +36,14 @@
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 
+
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
         <src>mod.ipmapper.js</src>
         <src>queryMap.js</src>
         <src>jquery.dynatable.js</src>
         <src>geoAng.js</src>
+        <!--<src>particle.js</src>-->
     </sp:script>
     <div class="ui-view-container">
         <div ui-view="main" class="main"></div>
