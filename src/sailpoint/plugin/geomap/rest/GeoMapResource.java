@@ -175,6 +175,39 @@ public class GeoMapResource extends AbstractPluginRestResource {
      * @param json
      */
     @POST
+    @Path("updateShape")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response updateShape(@FormParam("json") String json) throws GeneralException, JSONException, SQLException {
+        JSONObject test = new JSONObject(json);
+        String id = test.getString("id");
+        JSONArray path = test.getJSONArray("path");
+        Connection conn = null;
+        // TODO: this is how you close resource
+        try {
+            conn = sailpoint.plugin.server.PluginEnvironment.getEnvironment().getJDBCConnection();
+            String sql = String.format("update map_polygons set path = '"+path+"' where id='%s';", id);
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.executeUpdate(sql);
+            System.out.println("update shape...complete?");
+
+        } catch (Exception e) {
+            System.out.println("ERROR WIT UPDATE SHAPE " + e);
+            log.error(e);
+            log.debug(e);
+        }
+        finally {
+            if(conn != null)
+                conn.close();
+        }
+        return Response.ok().build();
+    }
+
+    /**
+     * Save map polygons for the current user
+     *
+     * @param json
+     */
+    @POST
     @Path("addBan")
     @Consumes("application/x-www-form-urlencoded")
     public Response addBan(@FormParam("json") String json) throws GeneralException, JSONException, SQLException {

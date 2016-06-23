@@ -73,6 +73,19 @@ var IPMapper = {
             google.maps.event.addListener(polygon, 'click', function(){IPMapper.destroyShape(polygon)});
             polygon.id = google.maps.geometry.encoding.encodePath(polygon.getPath());
 
+            polygon.getPaths().forEach(function(path, index){
+                google.maps.event.addListener(path, 'insert_at', function(){
+                    IPMapper.updateShapePath(polygon.id, polygon.getPath());
+                });
+                google.maps.event.addListener(path, 'remove_at', function(){
+                    IPMapper.updateShapePath(polygon, polygon.getPath());
+                });
+                google.maps.event.addListener(path, 'set_at', function(){
+                    IPMapper.updateShapePath(polygon, polygon.getPath());
+                });
+            });
+
+
             for(var key in allMarkers ){
                 if(google.maps.geometry.poly.containsLocation(allMarkers[key].getPosition(), polygon)){
                     allMarkers[key].banned += 1;
@@ -207,6 +220,24 @@ var IPMapper = {
 
         });
     },
+    updateShapePath: function(id, path){
+        console.log("UPDATING MAN", id , " is the id");
+        var toStore = JSON.stringify({"id" : id, "path" : path.getArray()});
+        // var coords = polygon.getPath().getArray();
+        $.ajax({
+            type: "POST",
+            contentType:"application/x-www-form-urlencoded",
+            url: "plugin/geoMap/updateShape",
+            beforeSend: function (request) {
+                request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            data: {
+                json: toStore
+            }
+        }).done(function(out){
+            console.log("UPDATE SHAPE WORKED!");
+        });
+    },
     removeBan: function(marker){
         var toStore = JSON.stringify({"id" : marker.id});
         $.ajax({
@@ -267,8 +298,19 @@ var IPMapper = {
                 path: eval(item["PATH"])
             });
             polygons[item["ID"]] = shape;
-            google.maps.event.addListener(shape, 'click', function(){
-                IPMapper.destroyShape(shape)});
+            google.maps.event.addListener(shape, 'click', function(){ IPMapper.destroyShape(shape)});
+            polygons[item["ID"]].getPaths().forEach(function(path, index){
+            google.maps.event.addListener(path, 'insert_at', function(){
+                    IPMapper.updateShapePath(item["ID"], polygons[item["ID"]].getPath());
+                });
+                google.maps.event.addListener(path, 'remove_at', function(){
+                    IPMapper.updateShapePath(item["ID"], polygons[item["ID"]].getPath());
+                });
+                google.maps.event.addListener(path, 'set_at', function(){
+                    IPMapper.updateShapePath(item["ID"], polygons[item["ID"]].getPath());
+                });
+            });
+
             // google.maps.event.addListener(shape, 'set_at', function(){
             //     IPMapper.destroyShape(shape)});
             // google.maps.event.addListener(shape, 'insert_at', function(){console.log("EDITEDD!!!")});
