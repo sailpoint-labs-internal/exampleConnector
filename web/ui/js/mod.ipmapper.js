@@ -317,11 +317,6 @@ var IPMapper = {
                     IPMapper.updateShapePath(item["ID"], polygons[item["ID"]].getPath());
                 });
             });
-
-            // google.maps.event.addListener(shape, 'set_at', function(){
-            //     IPMapper.destroyShape(shape)});
-            // google.maps.event.addListener(shape, 'insert_at', function(){console.log("EDITEDD!!!")});
-            // google.maps.event.addListener(shape, 'set_at', function(){console.log("EDITEDD!!!")});
         }
     },
     oneRem: function(id, zero){
@@ -364,6 +359,10 @@ var IPMapper = {
         IPMapper.latlngbound.extend(latlng);
         IPMapper.map.setCenter(IPMapper.latlngbound.getCenter());
         IPMapper.map.fitBounds(IPMapper.latlngbound);
+        if(!contentString.includes("ID")){
+            IPMapper.getIPInfoWindowEvent(marker, contentString);
+            IPMapper.map.panTo(marker.getPosition());
+        }
     },
     getIPInfoWindowEvent: function(marker, contentString){ //open Marker Info Window
         IPMapper.infowindow.close();

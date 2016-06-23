@@ -188,10 +188,8 @@ public class GeoMapResource extends AbstractPluginRestResource {
             String sql = String.format("update map_polygons set path = '"+path+"' where id='%s';", id);
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.executeUpdate(sql);
-            System.out.println("update shape...complete?");
-
+            log.debug("update shape...complete?");
         } catch (Exception e) {
-            System.out.println("ERROR WIT UPDATE SHAPE " + e);
             log.error(e);
             log.debug(e);
         }
