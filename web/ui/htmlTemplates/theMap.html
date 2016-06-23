@@ -13,7 +13,7 @@
         <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
     </div>
     <div id="c3">
-        <button class="cusbutton" style="font-size: 18px !important;" ui-sref="mainMenu"><i class="fa fa-arrow-left" aria-hidden="true"></i> <span class="thinFont"> BACK </span></button>
+        <button class="cusbutton" style="font-size: 14px !important;" ui-sref="mainMenu"><i class="fa fa-arrow-left" aria-hidden="true"></i> <span class="thinFont"> BACK </span></button>
     </div>
 </div>
 
@@ -22,7 +22,8 @@
 <div id="myMap2">
 <div id="map" style="height: 85vh;"></div>
 
-<h2 id="toggleTable" slide-toggle="#dyTable" onMouseOver="this.style.color='#2BA4C7'" onMouseOut="this.style.color='#000'" >Toggle Table</h2>
+<h2 id="toggleTable" slide-toggle="#dyTable" onMouseOver="this.style.color='#258BA7'" onMouseOut="this.style.color='#000'" ><i id="rotate" class="fa fa-arrow-circle-up" style="font-size:36px"></i>  Table</h2>
+<!--<h2 id="toggleTable" slide-toggle="#dyTable" onMouseOver="this.style.color='#258BA7'" onMouseOut="this.style.color='#2BA4C7'" ><i id="rotate" class="fa fa-arrow-circle-up" style="font-size:36px"></i>  Table</h2>-->
 <div id="dyTable" class ="slideable" style="padding-left: 20px">
     <table id="myTable" class="table hover">
         <thead>
@@ -44,7 +45,20 @@
     </div>
 
 <script type="text/javascript">
+
     $(".sp-footer").hide();
+
+    //rotate down
+    var row = document.getElementById('toggleTable');
+    var rotate = document.getElementById( 'rotate' );
+    row.addEventListener( 'click', function () {
+        if(rotate.className != 'fa fa-arrow-circle-up over') {
+            rotate.className = 'fa fa-arrow-circle-up over';
+        }
+        else{
+            rotate.className = 'fa fa-arrow-circle-up out';
+        }
+    }, false );
     //<![CDATA[
     $(document).ready(function(){
         try{

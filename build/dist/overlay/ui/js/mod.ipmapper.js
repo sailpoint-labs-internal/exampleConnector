@@ -21,8 +21,10 @@ var IPMapper = {
             zoom: 2,
             center: latlng,
             styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#2BA4C7"},{"visibility":"on"}]}],
-            mapTypeId: IPMapper.mapTypeId
-        };
+            mapTypeId: IPMapper.mapTypeId,
+            minZoom: 3
+
+    };
         //init Map
         IPMapper.map = new google.maps.Map(document.getElementById(mapId), mapOptions);
         //init info window
@@ -66,6 +68,9 @@ var IPMapper = {
         google.maps.event.addListener(IPMapper.infowindow, 'closeclick', function() {
             IPMapper.map.fitBounds(IPMapper.latlngbound);
             IPMapper.map.panToBounds(IPMapper.latlngbound);
+        });
+        google.maps.event.addListener(IPMapper.map, 'bounds_changed', function() {
+            google.maps.event.trigger(IPMapper.map, 'resize');
         });
 
         //listen for user to finish drawing polygon
@@ -124,34 +129,36 @@ var IPMapper = {
         delete polygons[polygon.id];
 
         var toStore = JSON.stringify({"ID": polygon.id});
-        var decision = confirm("Destroy Ban Region?");
-        if (decision) {
-            $.ajax({
-                type: "POST",
-                contentType:"application/x-www-form-urlencoded",
-                url: "plugin/geoMap/killShape",
-                beforeSend: function (request) {
-                    request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
-                },
-                data: {
-                    json: toStore
-                },
-                success: function(data){
-                    console.log(data + " IS DATA FROM deleting POLYGON"); //will alert ok
-                }
-            }).done(function(out){
-                console.log("UPDATE WORKED!");
+        // var decision = confirm("Destroy Ban Region?");
+        bootbox.confirm("Destroy Ban Region?", function(result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    contentType:"application/x-www-form-urlencoded",
+                    url: "plugin/geoMap/killShape",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+                    },
+                    data: {
+                        json: toStore
+                    },
+                    success: function(data){
+                        console.log(data + " IS DATA FROM deleting POLYGON"); //will alert ok
+                    }
+                }).done(function(out){
+                    console.log("UPDATE WORKED!");
 
-            });
-            for(var key in allMarkers){
-                if(google.maps.geometry.poly.containsLocation(allMarkers[key].getPosition(), polygon)) {
-                    IPMapper.oneRem(key);
-                    modified[key] = allMarkers[key];
+                });
+                for(var key in allMarkers){
+                    if(google.maps.geometry.poly.containsLocation(allMarkers[key].getPosition(), polygon)) {
+                        IPMapper.oneRem(key);
+                        modified[key] = allMarkers[key];
+                    }
                 }
+            polygon.setMap(null);
+            IPMapper.colorCode(modified);
             }
-        polygon.setMap(null);
-        IPMapper.colorCode(modified);
-        }
+        });
     },
     colorOne: function(marker_id){
         var icon2 = {

@@ -272,3 +272,46 @@ div#myMap{
 }
 
 
+.bootbox-body{
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.btn-primary, .btn-primary:active, .btn-primary:focus{
+    background-color: #2BA4C7;
+    border-color: #2BA4C7;
+
+}
+
+.btn-primary:hover{
+    background-color: #258ba7;
+    border-color: #2BA4C7;
+}
+
+.over {
+    transform:             rotate( -180deg );
+    -moz-transform:    rotate( -180deg );
+    -ms-transform:     rotate( -180deg );
+    -o-transform:      rotate( -180deg );
+    -webkit-transform: rotate( -180deg );
+    transition:             transform 550ms ease;
+    -moz-transition:    -moz-transform 550ms ease;
+    -ms-transition:     -ms-transform 550ms ease;
+    -o-transition:      -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
+
+.out {
+    transform:             rotate( -360deg );
+    -moz-transform:    rotate( -360deg );
+    -ms-transform:     rotate( -360deg );
+    -o-transform:      rotate( -360deg );
+    -webkit-transform: rotate( -360deg );
+    transition:             transform 550ms ease;
+    -moz-transition:    -moz-transform 550ms ease;
+    -ms-transition:     -ms-transform 550ms ease;
+    -o-transition:      -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
