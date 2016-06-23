@@ -8,46 +8,37 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:t="http://myfaces.apache.org/tomahawk">
-
 <head>
     <title>GeoMap plugin</title>
 </head>
-
-
-
 <ui:composition>
-
     <body ng-app="geoApp">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A&amp;libraries=drawing,geometry"></script>
-
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="ui/js/lib/angular/angular-animate.min.js"></script>
-
-
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAINinHSMi1pUMLz3SyNtraGexa2yaHK3A&amp;libraries=drawing,geometry"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"/>
     <sp:style enabled="false"
             serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/css">
         <src>fullPage.css</src>
     </sp:style>
 
-    <!--<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'></link>-->
     <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'/>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"/>
-
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-
-
     <sp:script enabled="false"
                serveOffset="#{base.requestContextPath}/#{pluginFramework.pluginFolderName}/#{pluginFramework.uniqueName}/ui/js">
         <src>mod.ipmapper.js</src>
         <src>queryMap.js</src>
         <src>jquery.dynatable.js</src>
+        <src>particles.min.js</src>
         <src>geoAng.js</src>
-        <!--<src>particle.js</src>-->
     </sp:script>
+
     <div class="ui-view-container">
         <div ui-view="main" class="main"></div>
     </div>
+
     </body>
 </ui:composition>
 </html>

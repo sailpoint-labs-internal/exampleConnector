@@ -1,10 +1,6 @@
 <div class="myMap">
 
 
-<link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'/>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css"/>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-
 <div style="height: 8px"></div>
 <div id="titleo" style="display: inline">
     <div id="c1">
@@ -17,14 +13,14 @@
         <h1 class="geoTitle"> GeoCoordinate <span id="thins">Login System</span></h1>
     </div>
     <div id="c3">
-        <button class="cusbutton" style="font-size: 20px !important;" ui-sref="mainMenu"><ia class="fa fa-arrow-left" aria-hidden="true"></i> <span class="thinFont"> BACK </span></button>
+        <button class="cusbutton" style="font-size: 20px !important;" ui-sref="mainMenu"><i class="fa fa-arrow-left" aria-hidden="true"></i> <span class="thinFont"> BACK </span></button>
     </div>
 </div>
 
 
 <!--<div id="map" style="height: 750px;"></div>-->
 <div id="myMap2">
-<div id="map" style="height: 80vh;"></div>
+<div id="map" style="height: 85vh;"></div>
 
 <h2 id="toggleTable" slide-toggle="#dyTable" onMouseOver="this.style.color='#2BA4C7'" onMouseOut="this.style.color='#000'" >Toggle Table</h2>
 <div id="dyTable" class ="slideable" style="padding-left: 20px">
@@ -48,6 +44,7 @@
     </div>
 
 <script type="text/javascript">
+    $(".sp-footer").hide();
     //<![CDATA[
     $(document).ready(function(){
         try{
@@ -113,7 +110,7 @@
         else {
             setTimeout(function(){
             bool = !bool;
-            $("#map").animate({height: "80vh"}, "slow");
+            $("#map").animate({height: "85vh"}, "slow");
             }, 800);
         }
     });

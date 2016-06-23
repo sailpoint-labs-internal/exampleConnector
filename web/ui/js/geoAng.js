@@ -32,6 +32,17 @@ var geo = angular.module('geoApp', ['ui.router', 'ngAnimate'])
                     }
                 }
             })
+            .state('particleView',{
+                url: '/particleView',
+                views: {
+                    'main': { templateUrl: PLUGIN_ROOT_FOLDER_URL + '/GeoMap/ui/htmlTemplates/part.html',
+                        controller: function ($scope) {
+                            $scope.id = 33;
+                            console.log("loaded map");
+                        }
+                    }
+                }
+            })
             .state('reportView', {
                 url: '/reports',
                 views: {

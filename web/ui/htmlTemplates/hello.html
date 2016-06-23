@@ -1,23 +1,149 @@
 <div style="margin: auto; text-align: center" class="helloHTML">
+
+    <div id="particles-js"></div>
 <!--<button class="cusbutton" style="font-size: 30px" ui-sref="mapView">CLICK ME MAP</button>-->
 <!--<button ui-sref="reportView">CLICK ME REPORTS</button>-->
 <button class="ctrl-standard typ-subhed fx-sliderIn" ui-sref="mapView"><span class="regFont">OPEN</span> MAP</button>
 <button class="ctrl-standard typ-subhed fx-sliderIn" ui-sref="reportView"><span ckass="regFont">OPEN</span> REPORT</button>
-
-    <!--<iframe id="my_iframe" style="display:none;"></iframe>-->
-    <!--<a class="sample " href="https://pbs.twimg.com/profile_images/732258093870911489/AN2FcC8A_normal.jpg" style="visibility: hidden" download></a>-->
-    <!--<script>-->
-    <!--$(document).ready(function() {-->
-        <!--$('.sample')[0].click();-->
-    <!--});-->
-    <!--</script>-->
+<button class="ctrl-standard typ-subhed fx-sliderIn" ui-sref="particleView"><span ckass="regFont">OPEN</span> PARTICLES </button>
 
 
     <style>
-        body::before {
-            display: none;
+        canvas {
+            display: block;
+            vertical-align: bottom;
         }
+        #particles-js {
+            position:absolute;
+            width:100%;
+            height:100vh;
+            /*z-index:9999;*/
+            /*width: 100%;*/
+            /*height: 100vh;*/
+            /*background-color: #b61924;*/
+            background: linear-gradient(-90deg, #33ccff, #b3ecff);
+            /*background-image: url("");*/
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 50% 50%;
+        }
+    </style>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 30,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.5,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 6,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 3
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": false,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 250,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+    <style>
         .typ-subhed {
+            z-index:9999;
+            color:#fff;
             font-family: 'Oswald', sans-serif;
             font-size: 35px;
             line-height: 37px;
@@ -26,7 +152,6 @@
             height: 80px;
             width: 400px;
         }
-        /* lets create a container and put it in the middle */
         .container {
             height: 100%;
             width: 50%;
@@ -106,7 +231,5 @@
         .fx-sliderIn.active::after {
             width: 300%;
         }
-
-
     </style>
 </div>
