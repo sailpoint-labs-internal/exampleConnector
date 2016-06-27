@@ -8,8 +8,8 @@
     </Description>
     <Attributes>
         <Map>
-            <entry key='pluginUniqueName' value='geoMap'/>
-            <entry key='implementationClass' value='sailpoint.plugin.geoMap.server.HelloService'/>
+            <entry key='pluginUniqueName' value='customConnector'/>
+            <entry key='implementationClass' value='sailpoint.plugin.customConnector.server.HelloService'/>
         </Map>
     </Attributes>
 </ServiceDefinition>

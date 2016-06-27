@@ -5,4 +5,5 @@
   <ImportAction name='include' value='{plugin_root}QuickLink.xml'/>
   <ImportAction name='include' value='{plugin_root}Permissions.xml'/>
   <ImportAction name='include' value='{plugin_root}ServiceDefinition.xml'/>
+  <ImportAction name='include' value='{plugin_root}CustomConnectorDemo.xml'/>
 </sailpoint>

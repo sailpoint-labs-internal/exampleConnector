@@ -6,7 +6,7 @@
     <Reference class="sailpoint.object.DynamicScope" name="Everyone"/>
   </DynamicScopeRef>
   <QuickLinkRef>
-    <Reference class="sailpoint.object.QuickLink" name="geoMap"/>
+    <Reference class="sailpoint.object.QuickLink" name="customConnector"/>
   </QuickLinkRef>
 </QuickLinkOptions>
 </sailpoint>

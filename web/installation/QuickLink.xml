@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
 <sailpoint>
-<QuickLink action="external" category="labs" messageKey="geoMap" name="geoMap">
+<QuickLink action="external" category="labs" messageKey="customConnector" name="customConnector">
   <Attributes>
     <Map>
-      <entry key="url" value="pluginPage.jsf?pn=geoMap"/>
+      <entry key="url" value="pluginPage.jsf?pn=customConnector"/>
     </Map>
   </Attributes>
 </QuickLink>

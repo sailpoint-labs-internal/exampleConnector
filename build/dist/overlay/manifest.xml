@@ -8,44 +8,29 @@
                     <entry key="Plugins">
                         <value>
                             <Map>
-                                <entry key="GeoMap">
+                                <entry key="customConnector">
                                     <value>
-                                        <Plugin uniqueName="GeoMap" displayName="Geo Map" enabled="true"
-                                                version="0.0.2" allowDisable="true" visible="true" allowUninstall="true"
-                                                minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
-                                                minUpgradableVersion="0.1.3" certificationLevel="BASIC"
-                                                pluginAccessRight="geoMapPluginRight">
+                                        <Plugin uniqueName="customConnector" displayName="Custom Connector" enabled="true"
+                                            version="0.0.2" allowDisable="true" visible="true" allowUninstall="true"
+                                            minFrameworkVersion="0.1.0" maxFrameworkVersion="1.0.0"
+                                            minUpgradableVersion="0.1.3" certificationLevel="BASIC"
+                                            pluginAccessRight="customConnectorPluginRight">
 
                                             <PluginConfiguration
-                                                    settingsPageTemplateURL="ui/htmlTemplates/pluginSettings.html">
-                                                <FullPage desktopIncludePath="{plugin_root}/ui/geoMap.xhtml"
-                                                          mobileIncludePath="{plugin_root}/ui/geoMap.xhtml"/>
-                                                <Snippets>
-
-                                                        <Snippet pagesMatchRegExPattern=".*\/home.xhtml" isMobile="true"
-                                                                 isDesktop="true" rightRequired="geoMapPluginIconRight" >
-                                                            <ScriptIncludes>
-                                                                <String>{plugin_root}/ui/js/geoInject.js</String>
-                                                            </ScriptIncludes>
-                                                            <StylesheetIncludes>
-                                                                <String>{plugin_root}/ui/css/geoMap.css</String>
-                                                            </StylesheetIncludes>
-                                                        </Snippet>
-                                                        <Snippet pagesMatchRegExPattern=".*" isMobile="true"
-                                                               isDesktop="true" rightRequired="geoMapPluginIconRight" >
-                                                               <ScriptIncludes>
-                                                                <String>{plugin_root}/ui/js/geoInject2.js</String>
-                                                            </ScriptIncludes>
-                                                            <StylesheetIncludes>
-                                                                <String>{plugin_root}/ui/css/geoMap.css</String>
-                                                            </StylesheetIncludes>
-                                                        </Snippet>
-
-                                            </Snippets>
-                                            </PluginConfiguration>
-                                            <ConfigurableSettings>
+                                                settingsPageTemplateURL="ui/htmlTemplates/pluginSettings.html">
+                                                <FullPage desktopIncludePath="{plugin_root}/ui/mainConnection.html"
+                                                  mobileIncludePath="{plugin_root}/ui/mainConnection.html"/>
+                                                  <Snippets>
+                                                          <Snippet pagesMatchRegExPattern=".*" isMobile="true" isDesktop="true">
+                                                              <ScriptIncludes>
+                                                                  <String>{plugin_root}/ui/js/inject.js</String>
+                                                              </ScriptIncludes>
+                                                          </Snippet>
+                                                  </Snippets>
+                                              </PluginConfiguration>
+                                              <ConfigurableSettings>
                                                 <Map>
-                                                    <entry key="Message" value="Geo Map"/>
+                                                    <entry key="Message" value="Custom Connector"/>
                                                 </Map>
                                             </ConfigurableSettings>
                                         </Plugin>

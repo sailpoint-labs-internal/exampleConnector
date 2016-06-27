@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Geo Map Sample Plugin" default="overlay">
+<project name="Custom Connector Sample Plugin" default="overlay">
 
 
   <!-- allow overriding of build properties -->
@@ -13,7 +13,7 @@
     <fileset dir="${iiq.home}/WEB-INF/lib">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="./web/jars" erroronmissingdir="false">
+    <fileset dir="build/jars" erroronmissingdir="false">
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="lib">
@@ -27,9 +27,6 @@
 
   <target name="compile">
     <mkdir dir="build/classes"/>
-    <!--<javac srcdir="src" destdir="build/classes" debug="true" classpathref="build.compile.classpath"-->
-           <!--includeantruntime="last">-->
-    <!--</javac>-->
     <javac srcdir="src" destdir="build/classes" debug="true" classpathref="build.compile.classpath"
            target="1.7" source="1.7" includeantruntime="last">
             </javac>
@@ -43,22 +40,25 @@
 
   <target name="overlay" depends="compile" description="Output zip file overlay to build/dist dir">
     <mkdir dir="${overlay}/jars"/>
-    <jar destfile="${overlay}/jars/geoMap.jar">
+    <jar destfile="${overlay}/jars/customConnector.jar">
       <fileset dir="build/classes">
         <include name="sailpoint/plugin/**"/>
         <include name="sailpoint/web/**"/>
-        <include name="com/sromku/polygon/**"/>
       </fileset>
     </jar>
     <copy todir="${overlay}">
       <fileset dir="web"/>
     </copy>
-    <zip basedir="${overlay}" destfile="build/dist/geoMap.${version}.zip"/>
+    <copy file="./web/ui/CustomConnectorDemo.xhtml" todir="${iiq.home}/define/ui"/>
+    <zip basedir="${overlay}" destfile="build/dist/customConnector.${version}.zip"/>
   </target>
 
   <target name="dist" depends="overlay" description="Dev dist to IIQ home">
-    <mkdir dir="${iiq.home}/plugins/geoMap"/>
-    <unzip dest="${iiq.home}/plugins/geoMap" src="build/dist/geoMap.${version}.zip" overwrite="true"/>
+    <copy file="./web/ui/CustomConnectorDemo.xhtml" todir="${iiq.home}/define/ui"/>
+    <mkdir dir="${iiq.home}/plugins/customConnector"/>
+    <unzip dest="${iiq.home}/plugins/customConnector" src="build/dist/customConnector.${version}.zip" overwrite="true"/>
   </target>
 
 </project>
+
+

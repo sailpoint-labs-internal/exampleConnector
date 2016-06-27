@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC
+                "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- (c) Copyright 2008 SailPoint Technologies, Inc., All Rights Reserved. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:sp="http://sailpoint.com/ui">
+<body>
+
+<ui:composition>
+
+    <script type="text/javascript">
+      <!--//--><![CDATA[//><!--
+        helpKey = 'APPLICATION';
+
+        function getFieldValue(field) {
+            var val = null;
+            var fileName = $(field);
+            if ( fileName ) {
+               val = fileName.value;
+            }
+            return val;
+        }
+        Ext.onReady(function () {
+           Ext.QuickTips.init();
+
+           // This is our validation hook
+           Page.on('beforeSave', function() {
+               var input1 = getFieldValue('editForm:input1');
+               Validator.validateNonBlankString(input1, "Input1 cannot be null!");
+	
+               var input2 = getFieldValue('editForm:input2');
+               Validator.validateNonBlankString(email, "Input2 cannot be null!");
+               
+               var errors = Validator.getErrors();
+               if (errors && errors.length > 0) {
+                   var errorDivTop = $('formErrorsTop');
+                   var errorDivBottom = $('formErrorsBottom');
+                   Validator.displayErrors(errorDivBottom); 
+                   Validator.displayErrors(errorDivTop); 
+                   return false;
+               }
+               //return false will kill cancel the save
+               return true;
+           });
+
+        });
+
+       //--><!]]>
+    </script>
+    <f:view>
+
+      <h:outputText styleClass="sectionHeader" value="CustomConnector Test Settings"/><br/><br/>
+      <div id='formErrorsTop' class="formError" style="display:none"/>
+
+      <div id="accountSettings" class='spContent'>
+        <table class="spTable" style="border:0px" cellspacing="0">
+          <tr>
+            <td class='titleColumn certScheduleTitleCol' valign="center">
+              <h:outputText style='padding:5px' value="input1"/>
+              <h:outputText styleClass="requiredText" value="*"/>
+            </td>
+
+            <td class="certScheduleHelpCol" valign="middle">
+              <h:graphicImage id="imgHlpHostName" styleClass="helpIcon" url="/images/icons/dashboard_help_16.png" 
+                              alt="input1"/>
+
+            </td>
+            <td valign="center">
+              <h:inputText id="input1"
+                           value="#{applicationObject.attributes['input1']}"
+                           size="20"                           
+                           disabled="#{!sp:hasRight(facesContext, 'ManageApplication')}"
+                           readonly="#{!sp:hasRight(facesContext, 'ManageApplication')}"/>
+            </td>
+          </tr>
+
+          <tr>
+            <td class='titleColumn certScheduleTitleCol'>
+              <h:outputText style='padding:5px' value="input2"/>
+              <h:outputText styleClass="requiredText" value="*"/>
+            </td>
+            <td class="certScheduleHelpCol">
+              <h:graphicImage id="imgHlpPort" styleClass="helpIcon" url="/images/icons/dashboard_help_16.png" 
+                              alt="input2"/>
+            </td>
+            <td>
+              <h:inputText id="input2"
+              			   value="#{applicationObject.attributes['input2']}"
+                           size="20"                           
+                           disabled="#{!sp:hasRight(facesContext, 'ManageApplication')}"
+                           readonly="#{!sp:hasRight(facesContext, 'ManageApplication')}"/>
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+      <div id='formErrorsBottom' class="formError" style="display:none"/>
+    </f:view>
+</ui:composition>
+
+</body>
+</html>

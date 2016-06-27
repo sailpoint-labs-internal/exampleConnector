@@ -1,2 +1,2 @@
-# GeoIp
-visualize where IIQ users are logging in from
+# Connector Example
+simple example of custom plugin connector

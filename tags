@@ -5,7 +5,7 @@ ensureSafeFunction	./build/dist/overlay/ui/js/angular-v1.2.22.js	/^function ensu
 fb	./build/dist/overlay/ui/js/jquery-2.2.4.min.js	/^    void 0!==c?e&&"set"in e&&void 0!==(d=e.set(a,c/
 function	./build/dist/overlay/ui/js/angular-v1.2.22.js	/^(function(window, document, undefined) {'use stric/
 getDB	./build/dist/overlay/ui/js/queryMap.js	/^function getDB(callback) {$/
-getDBhome	./build/dist/overlay/ui/js/geoInject2.js	/^function getDBhome(callback) {$/
+getDBhome	./build/dist/overlay/ui/js/inject.js	/^function getDBhome(callback) {$/
 get_locations	./build/dist/overlay/ui/js/queryMap.js	/^function get_locations(callback) {$/
 get_shapes	./build/dist/overlay/ui/js/queryMap.js	/^function get_shapes(callback) {$/
 hexToRgb	./build/dist/overlay/ui/js/particles.min.js	/^function hexToRgb(e){var a=\/^#?([a-f\\d])([a-f\\d/

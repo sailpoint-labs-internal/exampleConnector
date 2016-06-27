@@ -1,5 +1,0 @@
-select "About to drop table 'geo_table'";
-drop table if exists geo_table;
-
-select "About to drop table 'map_polygons'";
-drop table if exists map_polygons;

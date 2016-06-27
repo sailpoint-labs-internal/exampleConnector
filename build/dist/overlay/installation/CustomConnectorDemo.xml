@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+  <ImportAction name="merge">
+<Configuration name="ConnectorRegistry">
+ <Attributes>
+    <Map>
+      <entry key="applicationTemplates">
+        <value>
+          <List>
+  <Application connector="sailpoint.connector.OpenConnectorAdapter" featuresString="GROUP_PROVISIONING, PROVISIONING, SYNC_PROVISIONING, AUTHENTICATE, PASSWORD, ENABLE, SEARCH, UNSTRUCTURED_TARGETS, DISCOVER_SCHEMA, ACCOUNT_ONLY_REQUEST" icon="internetIcon" name="CustomConnectorDemo" profileClass="" type="CustomConnectorDemo">
+              <Attributes>
+                <Map>
+                  <entry key="authSearchAttributes">
+                    <value>
+                      <List>
+                        <String>UserID</String>
+                      </List>
+                    </value>
+                  </entry>
+                  <entry key="compositeDefinition"/>
+                  <entry key="connectorClass" value="sailpoint.plugin.CustomConnectorDemo"/>
+                  <entry key="formPath" value="../ui/CustomConnectorDemo.xhtml"/>
+                  <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                  <entry key="nativeChangeDetectionAttributes"/>
+                  <entry key="nativeChangeDetectionEnabled">
+                    <value>
+                      <Boolean></Boolean>
+                    </value>
+                  </entry>
+                  <entry key="nativeChangeDetectionOperations"/>
+                </Map>
+              </Attributes>
+              <Schemas>
+                <Schema displayAttribute="username" groupAttribute="groups" identityAttribute="username" instanceAttribute="" nativeObjectType="account" objectType="account">
+                  <AttributeDefinition name="username" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition name="firstname" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition name="lastname" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition name="email" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition multi="true" name="groups" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition name="disabled" remediationModificationType="None" type="boolean"/>
+                  <AttributeDefinition name="locked" remediationModificationType="None" type="boolean"/>
+                  <AttributeDefinition name="password" remediationModificationType="None" type="string"/>
+                </Schema>
+                <Schema displayAttribute="name" identityAttribute="name" instanceAttribute="" nativeObjectType="group" objectType="group">
+                  <AttributeDefinition name="name" remediationModificationType="None" type="string"/>
+                  <AttributeDefinition name="description" remediationModificationType="None" type="string"/>
+                </Schema>
+              </Schemas>
+              <Templates>
+                <Template name="account" usage="Create">
+                  <Field displayName="User Name" name="username" type="string">
+                    <Script>
+                      <Source>return identity.getName(); </Source>
+                    </Script>
+                  </Field>
+                  <Field displayName="First Name" name="firstname" type="string">
+                    <Script>
+                      <Source>return identity.getFirstname(); </Source>
+                    </Script>
+                  </Field>
+                  <Field displayName="Last Name" name="lastname" type="string">
+                    <Script>
+                      <Source>return identity.getLastname(); </Source>
+                    </Script>
+                  </Field>
+                  <Field displayName="Email Address" name="email" type="string">
+                    <Script>
+                      <Source>return identity.getEmail(); </Source>
+                    </Script>
+                  </Field>
+                  <Field name="disabled" type="boolean" value="false"/>
+                </Template>
+                <Template name="Update Group" usage="UpdateGroup"/>
+                <Template name="Group Creation" usage="CreateGroup">
+                  <Field displayName="Group Name" name="name" type="string"/>
+                  <Field displayName="Description" name="description" type="string"/>
+                </Template>
+              </Templates>
+            </Application>
+            </List>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+    </Configuration>
+  </ImportAction>
+</sailpoint>
