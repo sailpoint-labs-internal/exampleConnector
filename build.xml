@@ -54,11 +54,8 @@
   </target>
 
   <target name="dist" depends="overlay" description="Dev dist to IIQ home">
-    <copy file="./web/ui/CustomConnectorDemo.xhtml" todir="${iiq.home}/define/ui"/>
     <mkdir dir="${iiq.home}/plugins/customConnector"/>
     <unzip dest="${iiq.home}/plugins/customConnector" src="build/dist/customConnector.${version}.zip" overwrite="true"/>
   </target>
 
 </project>
-
-

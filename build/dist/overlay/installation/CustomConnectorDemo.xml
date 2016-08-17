@@ -20,7 +20,7 @@
                   </entry>
                   <entry key="compositeDefinition"/>
                   <entry key="connectorClass" value="sailpoint.plugin.CustomConnectorDemo"/>
-                  <entry key="formPath" value="../ui/CustomConnectorDemo.xhtml"/>
+                  <entry key="formPath" value="/{plugin_root}/ui/CustomConnectorDemo.xhtml"/>
                   <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
                   <entry key="nativeChangeDetectionAttributes"/>
                   <entry key="nativeChangeDetectionEnabled">
